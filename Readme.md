@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Рашид Байчоров](https://up.htmlacademy.ru/php/12/user/1180999).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Парфенов](https://htmlacademy.ru/profile/id926645).
 
 ---
 
