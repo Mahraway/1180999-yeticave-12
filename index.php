@@ -55,13 +55,13 @@ $user_name = 'Рашид'; // укажите здесь ваше имя
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         
         <!--Подключение списка категорий и товаров-->
-            <?php require('cat_db.php');?>
+            <?php require('data.php');?>
         
         <!--заполните этот список из массива категорий-->
         <ul class="promo__list">
-        <?php foreach($categories as $val): ?>      
+        <?php foreach($categories as $category): ?>      
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"><?= $val?></a>
+                <a class="promo__link" href="pages/all-lots.html"><?= $category?></a>
             </li>
         <?php endforeach; ?>
         </ul>
@@ -73,10 +73,10 @@ $user_name = 'Рашид'; // укажите здесь ваше имя
         <ul class="lots__list">
 
             <!--заполните этот список из массива с товарами-->
-            <?php foreach($items as $key => $val): ?>
+            <?php foreach($lots as $lot => $val): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="<?= $val['url_img']?>" width="350" height="260" alt="<?= $val['name']?>">
+                    <img src="<?= $val['img']?>" width="350" height="260" alt="<?= $val['name']?>">
                 </div>
                 <div class="lot__info">
                     <span class="lot__category"><?= $val['categories']?></span>
@@ -102,7 +102,7 @@ $user_name = 'Рашид'; // укажите здесь ваше имя
     <nav class="nav">
         <ul class="nav__list container">
             <!--заполните этот список из массива категорий-->
-            <?php foreach($categories as $val): ?>
+            <?php foreach($categories as $category): ?>
             <li class="nav__item">
                 <a href="pages/all-lots.html"><?= $val?></a>
             </li>
