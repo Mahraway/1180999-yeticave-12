@@ -74,10 +74,11 @@ $user_name = 'Рашид'; // укажите здесь ваше имя
 
         <!--Функция форматирование цены-->
         <?php
-            function format_price($price) {
+            function format_price(int $price):string {
                 if ($price<1000) {
                     return ceil($price).' ₽';
-                } else {
+                }  
+                {
                     return number_format($price, 0, ',', ' ').' ₽';
                 }
             }
