@@ -76,13 +76,11 @@ $user_name = 'Рашид'; // укажите здесь ваше имя
         <?php
             function format_price(int $price):string {
                 if ($price<1000) {
-                    return ceil($price).' ₽';
-                }  
-                {
+                        return ceil($price).' ₽';
+                    }
                     return number_format($price, 0, ',', ' ').' ₽';
                 }
-            }
-        ?>
+         ?>
 
             <!--заполните этот список из массива с товарами-->
             <?php foreach($lots as $lot => $val): ?>
