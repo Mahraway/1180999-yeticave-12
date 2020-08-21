@@ -71,16 +71,22 @@ $user_name = 'Рашид'; // укажите здесь ваше имя
             <h2>Открытые лоты</h2>
         </div>
         <ul class="lots__list">
-
-        <!--Функция форматирование цены-->
+        
         <?php
-            function format_price($price) {
-                if ($price<1000) {
-                    return ceil($price).' ₽';
-                } else {
-                    return number_format($price, 0, ',', ' ').' ₽';
-                }
+        /**
+         * Функция для форматирования суммы и добавления к ней знака рубля
+         * Ограничения: Функция должна принимать один аргумент — число.
+         * @param int $price Число
+         * @return string Форматированая строка вывода стоимости в карточке товара
+         */
+
+        function format_price(int $price): string
+        {
+            if ($price < 1000) {
+                return ceil($price).' ₽';
             }
+            return number_format($price, 0, ',', ' ').' ₽';
+        }
         ?>
 
             <!--заполните этот список из массива с товарами-->
