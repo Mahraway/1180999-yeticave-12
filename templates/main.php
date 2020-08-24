@@ -16,18 +16,6 @@
             <h2>Открытые лоты</h2>
         </div>
         <ul class="lots__list">
-
-        <!--Функция форматирование цены-->
-        <?php
-            function format_price($price) {
-                if ($price<1000) {
-                    return ceil($price).' ₽';
-                } else {
-                    return number_format($price, 0, ',', ' ').' ₽';
-                }
-            }
-        ?>
-
             <!--заполните этот список из массива с товарами-->
             <?php foreach($lots as $lot => $val): ?>
             <li class="lots__item lot">
@@ -48,6 +36,6 @@
                     </div>
                 </div>
             </li>
-            <?php endforeach;?>
+            <?php endforeach; ?>
         </ul>
     </section>
