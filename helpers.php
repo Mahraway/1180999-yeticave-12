@@ -143,4 +143,18 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+/**
+ * Функция для форматирования суммы и добавления к ней знака рубля
+ * Ограничения: Функция должна принимать один аргумент — число.
+ * @param int $price Число
+ * @return string Форматированая строка вывода стоимости в карточке товара
+ */
+
+function format_price($price): string
+{
+    if ($price < 1000) {
+        return ceil($price).' ₽';
+    }
+    return number_format($price, 0, ',', ' ').' ₽';
+}
 
