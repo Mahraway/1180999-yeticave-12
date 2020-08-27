@@ -6,8 +6,9 @@ $is_auth = rand(0, 1); // флаг авторизации
 $user_name = 'Рашид'; // укажите здесь ваше имя
 $title = 'YetiCave'; // Заголовок страницы
 
+
 $main_page = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
-$main_footer = include_template('footer.php', ['categories' => $categories]);
+$main_footer = include_template('footer.php', ['categories' => $categories, 'res' => $res]);
 $layout_content = include_template('layout.php', [
     'content' => $main_page,
     'footer' => $main_footer,
@@ -18,3 +19,4 @@ $layout_content = include_template('layout.php', [
 );
 
 print($layout_content);
+
