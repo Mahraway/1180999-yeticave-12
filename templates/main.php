@@ -30,17 +30,18 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?= format_price($val['price']); ?></span>
                         </div>
-
-                        <?php $timer = get_dt_range($val['time_left']); ?>
-                        <?php if ($timer['0'] < 1): ?>
-                        <?php $h_left = 'timer--finishing'; ?>
-                        <?php else : ?>
-                        <?php $h_left = ''; ?>
-                        <?php endif; ?>
-                        
-                        <div class="lot__timer timer <?= $h_left; ?>">   
-                        <?= $timer['0'].":".$timer['1']; ?>
-
+                        <!-- Формаирование класса с красной плашкой -->
+                        <?php 
+                        $timer = get_time_before($val['time_left']);
+                        if ($timer['1'] < 10) {
+                            $time_finishing_class = 'timer--finishing';
+                        } else {
+                            $time_finishing_class = '';
+                            }
+                        ?>
+                        <!-- Вывод таймера лота -->
+                        <div class="lot__timer timer <?= $time_finishing_class; ?>">   
+                        <?= $timer['0'].":".sprintf("%02d", $timer['1']); ?>
                         </div>
                     </div>
                 </div>

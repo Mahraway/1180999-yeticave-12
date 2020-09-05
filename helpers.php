@@ -166,20 +166,16 @@ function format_price($price): string
 *                                              а второй — остаток в минутах;
 */
 
-function get_dt_range($date): array
+function get_time_before(string $date): array
 {
-    date_default_timezone_set("Europe/Moscow");
-
     $total = (strtotime($date) - time())/60; // полных минут
 
     if ($total > 0) {
         $h = floor($total/60); // округление в меньшую сторону
         $m = $total % 60; // остаток минут
 
-        if ($m < 10) { // добавление "0" числу < 10
-            $m = str_pad($m, 2, "0", STR_PAD_LEFT);
-        }
         return [$h, $m];
-    }  
+    }
+    return [0, 0];
 }
 

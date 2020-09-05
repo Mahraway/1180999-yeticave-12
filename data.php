@@ -13,7 +13,7 @@ $lots = [
         'categories' => $categories[0],
         'price'=> '159999',
         'img' => 'img/lot-2.jpg',
-        'time_left' => '2020-08-30'
+        'time_left' => '2020-09-05 16:40'
         
     ],
     [
@@ -21,7 +21,7 @@ $lots = [
         'categories' => $categories[1],
         'price'=> '8000',
         'img' => 'img/lot-3.jpg',
-        'time_left' => '2020-09-01'  
+        'time_left' => '2020-09-06'  
     ],
     [
         'name' => 'Ботинки для сноуборда DC Mutiny Charocal',
