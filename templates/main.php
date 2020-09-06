@@ -32,16 +32,12 @@
                         </div>
                         <!-- Формаирование класса с красной плашкой -->
                         <?php 
-                        $timer = get_time_before($val['time_left']);
-                        if ($timer['1'] < 10) {
-                            $time_finishing_class = 'timer--finishing';
-                        } else {
-                            $time_finishing_class = '';
-                            }
+                        $timer = get_time_before($val['end_time']);
+                        ($timer[0] < 1) ? $time_finishing_class = 'timer--finishing': $time_finishing_class = '';
                         ?>
                         <!-- Вывод таймера лота -->
                         <div class="lot__timer timer <?= $time_finishing_class; ?>">   
-                        <?= $timer['0'].":".sprintf("%02d", $timer['1']); ?>
+                        <?= $timer[0].":".sprintf("%02d", $timer[1]); ?>
                         </div>
                     </div>
                 </div>
