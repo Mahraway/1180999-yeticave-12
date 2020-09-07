@@ -33,7 +33,7 @@
                         <!-- Формаирование класса с красной плашкой -->
                         <?php 
                         $timer = get_time_before($val['end_time']);
-                        ($timer[0] < 1) ? $time_finishing_class = 'timer--finishing': $time_finishing_class = '';
+                        $time_finishing_class = ($timer[0] < 1) ? 'timer--finishing':  '';
                         ?>
                         <!-- Вывод таймера лота -->
                         <div class="lot__timer timer <?= $time_finishing_class; ?>">   
