@@ -28,10 +28,16 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?= format_price($val['price'])?></span>
+                            <span class="lot__cost"><?= format_price($val['price']); ?></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <!-- Формаирование класса с красной плашкой -->
+                        <?php 
+                        $timer = get_time_before($val['end_time']);
+                        $time_finishing_class = ($timer[0] < 1) ? 'timer--finishing':  '';
+                        ?>
+                        <!-- Вывод таймера лота -->
+                        <div class="lot__timer timer <?= $time_finishing_class; ?>">   
+                        <?= $timer[0].":".sprintf("%02d", $timer[1]); ?>
                         </div>
                     </div>
                 </div>

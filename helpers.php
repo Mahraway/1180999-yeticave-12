@@ -158,3 +158,24 @@ function format_price($price): string
     return number_format($price, 0, ',', ' ').' ₽';
 }
 
+/**
+* Возвращает количество целых часов и остатка минут до даты из будущего
+* Ограничения: функция принимает один аргумент - дату в формате ГГГГ-ММ-ДД;
+* @param string $date Строка
+* @return array Массив, где первый элемент — целое количество часов до даты, 
+*                                              а второй — остаток в минутах;
+*/
+
+function get_time_before(string $date): array
+{
+    $total = (strtotime($date) - time())/60; // полных минут
+
+    if ($total > 0) {
+        $h = floor($total/60); // округление в меньшую сторону
+        $m = $total % 60; // остаток минут
+
+        return [$h, $m];
+    }
+    return [0, 0];
+}
+
