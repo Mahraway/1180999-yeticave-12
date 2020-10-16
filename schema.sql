@@ -7,33 +7,35 @@ USE yeticave;
 
 CREATE TABLE categories (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	name CHAR
+	name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE lots (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	dt_add TIMESTAMP,
-	name CHAR,
-	description CHAR,
-	image CHAR,
-	price INT,
-	dt_end TIMESTAMP,
-	step INT
+	category_id INT REFERENCES categories (id),
+	dt_add DATETIME NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	description VARCHAR(255) NOT NULL,
+	image VARCHAR(255) NOT NULL,
+	price INT NOT NULL,
+	dt_end TIMESTAMP NOT NULL,
+	step INT NOT NULL
 );
 
 CREATE TABLE bets (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	dt_add TIMESTAMP,
-	price INT
+	lot_id INT REFERENCES lots (id),
+	dt_add DATETIME,
+	price INT NOT NULL
 );
 
 CREATE TABLE users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	dt_add TIMESTAMP,
-	name CHAR,
-	email CHAR,
-	password CHAR,
-	contacts TEXT
+	dt_add DATETIME NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
+	password VARCHAR(255) NOT NULL,
+	contacts VARCHAR(255) NOT NULL
 );
 
 
