@@ -8,14 +8,14 @@ USE yeticave;
 
 -- Создание таблицы категорий
 CREATE TABLE categories (
-	category_id INT AUTO_INCREMENT, 
+	id INT AUTO_INCREMENT, 
 	name VARCHAR(255) NOT NULL, 
-	simbloic VARCHAR(255) NOT NULL,
+	code VARCHAR(255) NOT NULL,
 	PRIMARY KEY (category_id) -- указываю первичный ключ
 );
 
 CREATE TABLE users (
-	user_id INT AUTO_INCREMENT,
+	id INT AUTO_INCREMENT,
 	dt_add DATETIME NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL UNIQUE, -- поле с проверкой на уникальность
@@ -25,7 +25,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE lots (
-	lot_id INT AUTO_INCREMENT,
+	id INT AUTO_INCREMENT,
 	user_id INT NOT NULL,
 	category_id INT NOT NULL,
 	dt_add DATETIME NOT NULL,
@@ -35,15 +35,15 @@ CREATE TABLE lots (
 	price INT NOT NULL,
 	dt_end TIMESTAMP NOT NULL,
 	step INT NOT NULL,
-	PRIMARY KEY (lot_id), 											-- указываю первичный ключ
+	PRIMARY KEY (lot_id),
+	INDEX lots_name_idx,   		-- создаю индекс для поля, по которому будет поиск
+	INDEX lots_category_idx,	-- создаю индекс для поля, по которому будет поиск
 	FOREIGN KEY (category_id) REFERENCES categories (category_id),  -- указываю внешний ключ для поля
-	FOREIGN KEY (user_id) REFERENCES users (user_id),				-- указываю внешний ключ для поля
-	INDEX NIndex (name),											-- создаю индекс для поля, по которому будет поиск
-	INDEX CIndex (category_id)										-- создаю индекс для поля, по которому будет поиск
+	FOREIGN KEY (user_id) REFERENCES users (user_id)				-- указываю внешний ключ для поля
 );
 
 CREATE TABLE bets (
-	bet_id INT AUTO_INCREMENT,
+	id INT AUTO_INCREMENT,
 	user_id INT NOT NULL,
 	lot_id INT NOT NULL,
 	dt_add DATETIME,
