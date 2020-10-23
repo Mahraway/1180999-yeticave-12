@@ -36,8 +36,9 @@ CREATE TABLE lots (
 	dt_end TIMESTAMP NOT NULL,
 	step INT NOT NULL,
 	PRIMARY KEY (id),
-	INDEX lots_name_idx (NAME),   		-- создаю индекс для поля, по которому будет поиск
+	INDEX lots_name_idx (name),   		-- создаю индекс для поля, по которому будет поиск
 	INDEX lots_category_idx (category_id),	-- создаю индекс для поля, по которому будет поиск
+	INDEX lots_user_idx (user_id), 			-- создаю индекс для поля, по которому будет поиск
 	FOREIGN KEY (category_id) REFERENCES categories (id),  -- указываю внешний ключ для поля
 	FOREIGN KEY (user_id) REFERENCES users (id)				-- указываю внешний ключ для поля
 );
@@ -48,7 +49,9 @@ CREATE TABLE bets (
 	lot_id INT NOT NULL,
 	dt_add DATETIME,
 	price INT NOT NULL,
-	PRIMARY KEY (id), 								-- указываю первичный ключ
+	PRIMARY KEY (id), 
+	INDEX bets_user_idx (user_id),
+	INDEX bets_lot_idx (lot_id), 								
 	FOREIGN KEY (user_id) REFERENCES users (id),	-- указываю внешний ключ для поля
 	FOREIGN KEY (lot_id) REFERENCES lots (id)		-- указываю внешний ключ для поля
 );
