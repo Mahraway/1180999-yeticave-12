@@ -33,7 +33,7 @@ CREATE TABLE lots (
 	description VARCHAR(255) NOT NULL,
 	image VARCHAR(255) NOT NULL,
 	price INT NOT NULL,
-	dt_end TIMESTAMP NOT NULL,
+	dt_end DATETIME NOT NULL,
 	step INT NOT NULL,
 	PRIMARY KEY (id),
 	INDEX lots_name_idx (name),   		-- создаю индекс для поля, по которому будет поиск
