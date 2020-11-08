@@ -28,13 +28,13 @@ CREATE TABLE lots (
 	id INT AUTO_INCREMENT,
 	user_id INT NOT NULL,
 	category_id INT NOT NULL,
-	dt_add DATETIME NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(255) NOT NULL,
 	image VARCHAR(255) NOT NULL,
 	price INT NOT NULL,
-	dt_end DATETIME NOT NULL,
 	step INT NOT NULL,
+	dt_add DATETIME NOT NULL,
+	dt_end DATETIME NOT NULL,
 	PRIMARY KEY (id),
 	INDEX lots_name_idx (name),   		-- создаю индекс для поля, по которому будет поиск
 	INDEX lots_category_idx (category_id),	-- создаю индекс для поля, по которому будет поиск
