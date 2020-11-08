@@ -150,7 +150,7 @@ function include_template($name, array $data = []) {
  * @return string Форматированая строка вывода стоимости в карточке товара
  */
 
-function format_price($price): string
+function format_price(int $price): string
 {
     if ($price < 1000) {
         return ceil($price).' ₽';
