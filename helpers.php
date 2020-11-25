@@ -179,3 +179,23 @@ function get_time_before(string $date): array
     return [0, 0];
 }
 
+/**
+ * Функция проверки и подлкючения БД
+ * Ограничения: функция принимает четыре аргумента - хост, имя пользователя, пароль и имя БД
+ * @param string $host обычно localhost
+ * @param string $user имя пользователя
+ * @param string $pass пароль
+ * @param string $db имя базы данных
+ * @return в случае успеха возвращает идентификатор соединения
+ */
+function db_connect(string $host, string $user, string $pass, string $db)
+{
+   $connection = @mysqli_connect($host, $user, $pass, $db);
+    if (!$connection) {
+        exit('Соединение не удалось. <br> Причина: '. mysqli_connect_error());
+    }
+    mysqli_set_charset($connection, "UTF8");
+    return $connection;   
+}
+
+
