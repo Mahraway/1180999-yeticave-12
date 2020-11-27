@@ -3,7 +3,7 @@
 $dbHost = 'localhost';
 $dbUser = 'root';
 $dbPassword = 'root';
-$dbDatabase = 'yeticave';
+$dbDatabase = 'yeticae';
 
 // Основные настройки сайта
 $is_auth = rand(0, 1);

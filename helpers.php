@@ -186,13 +186,13 @@ function get_time_before(string $date): array
  * @param string $user имя пользователя
  * @param string $pass пароль
  * @param string $db имя базы данных
- * @return в случае успеха возвращает идентификатор соединения
- */
-function db_connect(string $host, string $user, string $pass, string $db)
+ * @return mysqli в случае успеха возвращает идентификатор соединения
+ * */
+function db_connect(string $host, string $user, string $pass, string $db): mysqli
 {
-   $connection = @mysqli_connect($host, $user, $pass, $db);
+   $connection = mysqli_connect($host, $user, $pass, $db);
     if (!$connection) {
-        exit('Соединение не удалось. <br> Причина: '. mysqli_connect_error());
+        exit('<br>Соединение не удалось: '. mysqli_connect_error());
     }
     mysqli_set_charset($connection, "UTF8");
     return $connection;   

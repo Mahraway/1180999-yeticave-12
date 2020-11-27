@@ -2,10 +2,10 @@
 
 /**
  * Функция формирования самых новых и активных лотов на главной странице
- * @param $connection - идентификатор соединения с БД
- * @return $lots - ассоциативный массив с содержимым лотов
+ * @param mysqli $connection - идентификатор соединения с БД
+ * @return array $lots - ассоциативный массив с содержимым лотов
  */
-function get_active_lots($connection)
+function get_active_lots(mysqli $connection): array
 {
     $lots = 
         "SELECT l.id, l.name, l.price, MAX(b.price) AS current_price , image, c.name AS category_name, l.dt_end
@@ -23,10 +23,10 @@ function get_active_lots($connection)
 
 /**
  * Функция формирования категорий товаров
- * @param $connection - идентификатор соединения с БД
- * @return $categories - ассоциативный массив с списком категорий 
+ * @param mysqli $connection - идентификатор соединения с БД
+ * @return array $categories - ассоциативный массив с списком категорий 
  */
-function get_categories($connection)
+function get_categories(mysqli $connection): array
 {
     $categories = 
         "SELECT id, name, code 
