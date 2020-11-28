@@ -5,12 +5,12 @@ error_reporting(E_ALL);
 
 date_default_timezone_set("Europe/Moscow");
 include_once('helpers.php');
-include_once('data.php');
+include_once('config.php');
+include_once('queries.php');
 
-$is_auth = rand(0, 1); // флаг авторизации
-$user_name = 'Рашид'; // укажите здесь ваше имя
-$title = 'YetiCave'; // Заголовок страницы
-
+$connection = db_connect($dbHost, $dbUser, $dbPassword, $dbDatabase);
+$lots = get_active_lots($connection);
+$categories = get_categories($connection);
 
 $main_page = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
