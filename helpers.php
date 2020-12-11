@@ -199,3 +199,28 @@ function db_connect(string $host, string $user, string $pass, string $db): mysql
 }
 
 
+/**
+ * Описание: функуия формирования названия категории лота
+ * Алгоритм: ID категории лота сравнивает с массивом категорий
+ * При выполнении условия, возвращает название категории
+ * @param array $lot массив с данными лота
+ * @param array $categories массив с категориями
+ * @return string $name возвращает возвращает название категории лота
+ */
+function get_category_name(array $lot, array $categories): string
+{
+    foreach($lot as $val) {
+        $result = $val['category_id'];
+        foreach($categories as $category) {
+            switch ($result) {
+                case $category['id']: 
+                    $category_name = $category['name'];
+            break;
+            }
+        }
+    }
+    return $category_name;
+}
+
+
+

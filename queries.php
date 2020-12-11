@@ -36,3 +36,31 @@ function get_categories(mysqli $connection): array
 
     return $categories;
 }
+
+/**create documentation */
+function get_lot(int $id, mysqli $connection): array
+{
+    if (!empty($id)) {
+    $lot = 
+        "SELECT *
+        FROM lots
+        WHERE id = $id";
+    $result = mysqli_query($connection, $lot);
+    $lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        exit;
+    }
+
+    return $lot;
+}
+
+function get_all_lots(mysqli $connection): array
+{
+    $lots = 
+        "SELECT id
+        FROM lots";
+    $result = mysqli_query($connection, $lots);
+    $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $lots;
+}
