@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
-<?php foreach($lot as $val): ?>
   <meta charset="UTF-8">
-  <title><?= $title.' | '.$val['name']; ?></title>
+  <title><?= $title.' | '.$lot['name']; ?></title>
   <link href="../css/normalize.min.css" rel="stylesheet">
   <link href="../css/style.css" rel="stylesheet">
 </head>
@@ -45,19 +43,19 @@
       </ul>
     </nav>
     <section class="lot-item container">
-      <h2><?= $val['name']; ?></h2>      
+      <h2><?= $lot['name']; ?></h2>      
       <div class="lot-item__content">
         <div class="lot-item__left">
           <div class="lot-item__image">
-            <img src="../<?= $val['image'] ?>" width="730" height="548" alt="<?= $val['name']?>">
+            <img src="../<?= $lot['image'] ?>" width="730" height="548" alt="<?= $lot['name']?>">
           </div>
           <p class="lot-item__category">Категория: <span><?= get_category_name($lot,$categories)?></span></p>
-          <p class="lot-item__description"><?= $val['description'] ?></p>
+          <p class="lot-item__description"><?= $lot['description'] ?></p>
         </div>
         <div class="lot-item__right">
           <div class="lot-item__state">
             <?php
-            $timer = get_time_before($val['dt_end']);
+            $timer = get_time_before($lot['dt_end']);
             $time_finishing_class = ($timer[0] < 1) ? 'timer--finishing':  '';
             ?>
             <div class="lot-item__timer timer <?= $time_finishing_class?>">
@@ -68,10 +66,10 @@
             <div class="lot-item__cost-state">
               <div class="lot-item__rate">
                 <span class="lot-item__amount">Текущая цена</span>
-                <span class="lot-item__cost"><?= format_price($val['price']) ?></span>
+                <span class="lot-item__cost"><?= format_price($lot['price']) ?></span>
               </div>
               <div class="lot-item__min-cost">
-                Мин. ставка <span><?= format_price($val['step']) ?></span>
+                Мин. ставка <span><?= format_price($lot['step']) ?></span>
               </div>
             </div>
             <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">
@@ -142,7 +140,6 @@
       </div>
     </section>
   </main>
-<?php endforeach; ?>
 </div>
 
 <footer class="main-footer"><?= $footer ?></footer>

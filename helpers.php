@@ -198,7 +198,6 @@ function db_connect(string $host, string $user, string $pass, string $db): mysql
     return $connection;   
 }
 
-
 /**
  * Описание: функуия формирования названия категории лота
  * Алгоритм: ID категории лота сравнивает с массивом категорий
@@ -209,14 +208,12 @@ function db_connect(string $host, string $user, string $pass, string $db): mysql
  */
 function get_category_name(array $lot, array $categories): string
 {
-    foreach($lot as $val) {
-        $result = $val['category_id'];
-        foreach($categories as $category) {
-            switch ($result) {
-                case $category['id']: 
-                    $category_name = $category['name'];
-            break;
-            }
+    $result = $lot['category_id'];
+    foreach($categories as $category) {
+        switch ($result) {
+            case $category['id']: 
+                $category_name = $category['name'];
+        break;
         }
     }
     return $category_name;
