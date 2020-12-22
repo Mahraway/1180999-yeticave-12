@@ -48,30 +48,22 @@ function get_categories(mysqli $connection): array
  * @param mysqli $connection - идентифиактор соединения с БД
  * @return array - одномерный массив с данными о лоте
  */
-function get_lot(int $id, mysqli $connection): array
+function get_lot(mysqli $connection, int $id): ?array
 {    
     $lot = 
         "SELECT *
         FROM lots
         WHERE id = $id";
-
-    $lots =
-        "SELECT id
-        FROM lots";
     
     $result = mysqli_query($connection, $lot);
-    $result2 = mysqli_query($connection, $lots);
 
-    if (!$result and !$result2) {
+    if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
-    } 
+    }
     
-    $lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $lots = mysqli_fetch_all($result2, MYSQLI_ASSOC);
+    $lot = mysqli_fetch_assoc($result);
 
-    if (in_array($id, array_column($lots, 'id'))) {
-        $lot = call_user_func_array('array_merge', $lot);
-        return $lot;
-    } else exit;
+    return $lot;
 }
+
 

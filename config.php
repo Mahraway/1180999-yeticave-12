@@ -7,6 +7,6 @@ $dbDatabase = 'yeticave';
 
 // Основные настройки сайта
 $is_auth = rand(0, 1);
-$user_name = 'Рашид'; 
+$user_name = 'Рашид';
 $title = 'YetiCave';
 

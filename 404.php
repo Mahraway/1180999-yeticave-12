@@ -6,9 +6,9 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-include_once('helpers.php');
-include_once('config.php');
-include_once('queries.php');
+requrie_once('helpers.php');
+require_once('config.php');
+require_once('queries.php');
 
 $connection = db_connect($dbHost, $dbUser, $dbPassword, $dbDatabase);
 $categories = get_categories($connection);
@@ -21,4 +21,3 @@ $layout = include_template('404.php', [
 ]);
 
 print($layout);
-exit();

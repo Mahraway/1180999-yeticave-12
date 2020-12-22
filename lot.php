@@ -7,15 +7,22 @@ date_default_timezone_set("Europe/Moscow");
 
 include_once('helpers.php');
 include_once('queries.php');
-
-if (!empty ($_GET['id'])) {
-    $id = $_GET['id'];
-} else include('404.php');
-
 include_once('config.php');
+
+//написать функцию
+// $id = getParamId($_GET);
+$id = $_GET['id'];
+if (!$id) {
+    header('Location: 404.php');
+}
+
 $connection = db_connect($dbHost, $dbUser, $dbPassword, $dbDatabase);
 $categories = get_categories($connection);
-$lot = get_lot($id, $connection);
+$lot = get_lot($connection,$id);
+
+if (!$lot) {
+    header('Location: 404.php');
+}
 
 $main_footer = include_template('footer.php', ['categories' => $categories]);
 $layout_content = include_template('lot.php', [
