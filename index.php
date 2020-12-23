@@ -1,14 +1,6 @@
 <?php
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+require_once('bootstrap.php');
 
-date_default_timezone_set("Europe/Moscow");
-include_once('helpers.php');
-include_once('config.php');
-include_once('queries.php');
-
-$connection = db_connect($dbHost, $dbUser, $dbPassword, $dbDatabase);
 $lots = get_active_lots($connection);
 $categories = get_categories($connection);
 

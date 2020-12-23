@@ -1,16 +1,8 @@
 <?php
 header("HTTP/1.1 404 Not Found");
 header("Status: 404 Not Found");
+require_once('bootstrap.php');
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
-require_once('helpers.php');
-require_once('config.php');
-require_once('queries.php');
-
-$connection = db_connect($dbHost, $dbUser, $dbPassword, $dbDatabase);
 $categories = get_categories($connection);
 
 $footer = include_template('footer.php', ['categories' => $categories]);
