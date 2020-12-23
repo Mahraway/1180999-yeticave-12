@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Функция формирования самых новых и активных лотов на главной странице
  * @param mysqli $connection - идентификатор соединения с БД
@@ -16,6 +15,9 @@ function get_active_lots(mysqli $connection): array
         GROUP BY (l.id)
         ORDER BY l.dt_add DESC";
     $result = mysqli_query($connection, $lots);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
     $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     return $lots;
@@ -32,7 +34,36 @@ function get_categories(mysqli $connection): array
         "SELECT id, name, code 
         FROM categories";
     $result = mysqli_query($connection, $categories);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
     $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     return $categories;
 }
+
+/**
+ * Функция возвращает информацию о лоте по id, а так же проверяем существование лота в БД
+ * @param int $id - идентифиактор лота
+ * @param mysqli $connection - идентифиактор соединения с БД
+ * @return array - одномерный массив с данными о лоте
+ */
+function get_lot(mysqli $connection, int $id): ?array
+{    
+    $lot = 
+        "SELECT *
+        FROM lots
+        WHERE id = $id";
+    
+    $result = mysqli_query($connection, $lot);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    
+    $lot = mysqli_fetch_assoc($result);
+
+    return $lot;
+}
+
+

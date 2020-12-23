@@ -188,9 +188,15 @@ function get_time_before(string $date): array
  * @param string $db имя базы данных
  * @return mysqli в случае успеха возвращает идентификатор соединения
  * */
-function db_connect(string $host, string $user, string $pass, string $db): mysqli
+function db_connect(array $db_config): mysqli
 {
-    $connection = mysqli_connect($host, $user, $pass, $db);
+    $connection = mysqli_connect(
+        $db_config['host'],
+        $db_config['user'],
+        $db_config['password'],
+        $db_config['database']
+    );
+    
     if (!$connection) {
         exit('<br>Соединение не удалось: '. mysqli_connect_error());
     }
@@ -198,4 +204,39 @@ function db_connect(string $host, string $user, string $pass, string $db): mysql
     return $connection;   
 }
 
+/**
+ * Описание: функуия формирования названия категории лота
+ * Алгоритм: ID категории лота сравнивает с массивом категорий
+ * При выполнении условия, возвращает название категории
+ * @param array $lot массив с данными лота
+ * @param array $categories массив с категориями
+ * @return string $name возвращает возвращает название категории лота
+ */
+function get_category_name(array $lot, array $categories): string
+{
+    $result = $lot['category_id'];
+    foreach($categories as $category) {
+        switch ($result) {
+            case $category['id']: 
+                $category_name = $category['name'];
+        break;
+        }
+    }
+    return $category_name;
+}
+
+/**
+ * Принимает глабоальный массив $_GET. 
+ * Проверяет на сущестование элемента id массива
+ * @param array $param глобальный массив $_GET
+ * @return (int or null) в случае успешной проверки возвращает целое число, иначе null
+ */
+function getParamId(array $param): ?int
+{
+    $id = $param['id'] ?? null;
+    if (!$id || !is_numeric($id)) {
+        return null;
+    }
+    return (int) $id;
+}
 

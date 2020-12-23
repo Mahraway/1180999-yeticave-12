@@ -1,12 +1,16 @@
-﻿<?php
-//Настройки для подключения к БД
-$dbHost = 'localhost';
-$dbUser = 'root';
-$dbPassword = 'root';
-$dbDatabase = 'yeticave';
-
-// Основные настройки сайта
-$is_auth = rand(0, 1);
-$user_name = 'Рашид'; 
-$title = 'YetiCave';
-
+<?php
+return [
+    'db' => [
+        'host' => 'localhost',
+        'user' => 'root',
+        'password' => 'root',
+        'database' => 'yeticave'
+    ],
+    'mailer' => [
+        'host' => 'smtp.yandex.ru',
+        'username' => 'sender@test.ru',
+        'password' => 'Vbs3Hts42sdh',
+        'port' => '465',
+        'encryption' => 'SSL'
+    ]
+];

@@ -1,13 +1,23 @@
 <?php
 require_once('bootstrap.php');
 
-$lots = get_active_lots($connection);
-$categories = get_categories($connection);
+$id = getParamId($_GET);
 
-$main_page = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
+if (!$id) {
+    header('Location: /404.php');
+}
+
+$categories = get_categories($connection);
+$lot = get_lot($connection,$id);
+
+if (!$lot) {
+    header('Location: /404.php');
+}
+
 $main_footer = include_template('footer.php', ['categories' => $categories]);
-$layout_content = include_template('layout.php', [
-    'content' => $main_page,
+$layout_content = include_template('lot.php', [
+    'lot' => $lot,
+    'categories' => $categories,
     'footer' => $main_footer,
     'title' => $title,
     'user_name' => $user_name,
