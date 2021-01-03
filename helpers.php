@@ -162,7 +162,7 @@ function format_price(int $price): string
 * Возвращает количество целых часов и остатка минут до даты из будущего
 * Ограничения: функция принимает один аргумент - дату в формате ГГГГ-ММ-ДД;
 * @param string $date Строка
-* @return array Массив, где первый элемент — целое количество часов до даты, 
+* @return array Массив, где первый элемент — целое количество часов до даты,
 *                                              а второй — остаток в минутах;
 */
 
@@ -196,12 +196,12 @@ function db_connect(array $db_config): mysqli
         $db_config['password'],
         $db_config['database']
     );
-    
+
     if (!$connection) {
         exit('<br>Соединение не удалось: '. mysqli_connect_error());
     }
     mysqli_set_charset($connection, "UTF8");
-    return $connection;   
+    return $connection;
 }
 
 /**
@@ -217,7 +217,7 @@ function get_category_name(array $lot, array $categories): string
     $result = $lot['category_id'];
     foreach($categories as $category) {
         switch ($result) {
-            case $category['id']: 
+            case $category['id']:
                 $category_name = $category['name'];
         break;
         }
@@ -226,7 +226,7 @@ function get_category_name(array $lot, array $categories): string
 }
 
 /**
- * Принимает глабоальный массив $_GET. 
+ * Принимает глабоальный массив $_GET.
  * Проверяет на сущестование элемента id массива
  * @param array $param глобальный массив $_GET
  * @return (int or null) в случае успешной проверки возвращает целое число, иначе null
@@ -238,5 +238,30 @@ function getParamId(array $param): ?int
         return null;
     }
     return (int) $id;
+}
+
+/**
+ * Функция сохраняет введенное значение в текстовом поле
+ * @param string $name
+ * @return string
+ */
+function get_post_value(string $name) : string
+{
+    return $_POST[$name] ?? '';
+}
+
+/**
+ * Функция сохраняет выбранное значение в выпадающем списке SELECT
+ * @param string $name
+ * @return string
+ */
+function get_post_select(string $name) : ?string
+{
+    if (isset($_POST['category'])) {
+        if ($name == $_POST['category']) {
+            return 'selected';
+        }
+    }
+    return null;
 }
 

@@ -6,7 +6,7 @@
  */
 function get_active_lots(mysqli $connection): array
 {
-    $lots = 
+    $lots =
         "SELECT l.id, l.name, l.price, MAX(b.price) AS current_price , image, c.name AS category_name, l.dt_end
         FROM lots l
         JOIN categories c ON c.id = l.category_id
@@ -26,12 +26,12 @@ function get_active_lots(mysqli $connection): array
 /**
  * Функция формирования категорий товаров
  * @param mysqli $connection - идентификатор соединения с БД
- * @return array $categories - ассоциативный массив с списком категорий 
+ * @return array $categories - ассоциативный массив с списком категорий
  */
 function get_categories(mysqli $connection): array
 {
-    $categories = 
-        "SELECT id, name, code 
+    $categories =
+        "SELECT id, name, code
         FROM categories";
     $result = mysqli_query($connection, $categories);
     if (!$result) {
@@ -49,21 +49,44 @@ function get_categories(mysqli $connection): array
  * @return array - одномерный массив с данными о лоте
  */
 function get_lot(mysqli $connection, int $id): ?array
-{    
-    $lot = 
+{
+    $lot =
         "SELECT *
         FROM lots
         WHERE id = $id";
-    
+
     $result = mysqli_query($connection, $lot);
 
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
-    
+
     $lot = mysqli_fetch_assoc($result);
 
     return $lot;
 }
+
+function add_lot(mysqli $connection, $lot)
+{
+    $lot = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
+        VALUES (
+                '".$lot['user']."',
+                '".$lot['category']."',
+                 NOW(),
+                '".$lot['name']."',
+                '".$lot['message']."',
+                '".$lot['img_url']."',
+                '".$lot['price']."',
+                '".$lot['dt_end']."',
+                '".$lot['step']."'
+        );
+    ";
+
+    $result = mysqli_query($connection, $lot);
+    if (!$result) {
+        exit('Ошибка ' . mysqli_error($connection));
+    }
+}
+
 
 
