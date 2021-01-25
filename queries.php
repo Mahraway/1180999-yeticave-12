@@ -66,26 +66,41 @@ function get_lot(mysqli $connection, int $id): ?array
     return $lot;
 }
 
-function add_lot(mysqli $connection, $lot)
+/**
+ * @param mysqli $connection
+ * @param $lot
+ */
+function add_lot(mysqli $connection, $lot): string
 {
-    $lot = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
+    $lot['user'] = 1;
+
+    $add_query = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
         VALUES (
                 '".$lot['user']."',
                 '".$lot['category']."',
                  NOW(),
-                '".$lot['name']."',
+                '".$lot['lot-name']."',
                 '".$lot['message']."',
-                '".$lot['img_url']."',
-                '".$lot['price']."',
-                '".$lot['dt_end']."',
-                '".$lot['step']."'
+                '".$_FILES['lot-img']['img-url']."',
+                '".$lot['lot-rate']."',
+                '".$lot['lot-date']."',
+                '".$lot['lot-step']."'
         );
     ";
+    $new_lot = "SELECT id FROM lots WHERE NAME = '".$lot['lot-name']."'";
 
-    $result = mysqli_query($connection, $lot);
+    $result = mysqli_query($connection, $add_query);
     if (!$result) {
         exit('Ошибка ' . mysqli_error($connection));
     }
+
+    $result = mysqli_query($connection, $new_lot);
+    if (!$result) {
+        exit('Ошибка ' . mysqli_error($connection));
+    }
+    $new_lot = mysqli_fetch_assoc($result);
+    return $new_lot['id'];
+
 }
 
 

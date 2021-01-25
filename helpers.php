@@ -265,3 +265,127 @@ function get_post_select(string $name) : ?string
     return null;
 }
 
+
+/** Функция проверки полей формы лота, найденные ошибки записывает в массив
+ * Если ошибок нет, возвращает пустой массив
+ * @return array $error массив ошибок
+ */
+function validateLotForm(): array
+{
+    $errors = [];
+
+    // Обязаьельные поля
+    $required_fields = ['lot-name', 'message', 'lot-rate', 'lot-step', 'lot-date','category'];
+
+    // Числовые поля
+    $numeric_fields = ['lot-rate', 'lot-step','category'];
+
+    foreach ($required_fields as $field) {
+        $error = validateFilled($field);
+        if ($error) {
+            $errors[$field] = $error;
+        }
+        $error = validateLength($field);
+        if ($error) {
+            $errors[$field] = $error;
+        }
+    }
+
+    foreach ($numeric_fields as $field) {
+        $_POST['lot-step'] = str_replace(',','.', $_POST['lot-step']);
+        $error = validateNumeric($field);
+        if ($error) {
+            $errors[$field] = $error;
+        }
+    }
+
+    if (is_date_valid($_POST['lot-date'])) {
+        $user_date = strtotime($_POST['lot-date']);
+        if ($user_date - time() < 60*60*12) {
+            $errors['lot-date'] = 'Дата должна быть больше 1 день';
+        }
+    }
+
+    if (!is_null(validateFile())) {
+        $errors['lot-img'] = validateFile();
+    }
+
+    if ($_POST['lot-rate'] <= 0) {
+        $errors['lot-rate'] = 'Введите число больше нуля';
+    }
+
+    if (is_numeric($_POST['lot-step']) && $_POST['lot-step'] > 0) {
+        $_POST['lot-step'] = round($_POST['lot-step']);
+    } else {
+        $errors['lot-step'] = 'Введите положительное число больше нуля';
+    }
+
+    return $errors;
+}
+
+
+// Ниже функции проверки полей формы
+
+
+/** Проверка на заполненность поля
+ * @param string $field ключ в массиве $_POST, поле формы
+ * @return string|null если элемент не существует, записывает код ошибки в массив ошибок
+ */
+function validateFilled(string $field): ?string
+{
+    if (empty($_POST[$field])) {
+        return 'Поле должно быть заполнено';
+    }
+    return null;
+}
+
+/** Проверка число ли введено
+ * @param string $field данные с поля формы
+ * @return string|null если введно не число, то записывает код ошибки в массив ошибок
+ */
+function validateNumeric(string $field): ?string
+{
+    if (!is_numeric($_POST[$field])) {
+        return 'Введите числовое значение';
+    }
+    return null;
+}
+
+/** Проевряет длинну строки, в БД ограничение до 255 символов
+ * @param string $field данные с поля формы
+ * @return string|null если введенная строка больше 255, записывает код ошибки в массив ошибок
+ */
+function validateLength(string $field): ?string
+{
+    if (strlen($_POST[$field]) > 255 ) {
+        return 'Не более 255 символов';
+    }
+    return null;
+}
+
+/** Функция проверки добавляемого файла
+ * @return string|null если проверка прошла успешно, то размещает в корневой папке uploads,
+ *                     в случае ошибки записывает код ошибки в массив ошибок
+ */
+function validateFile(): ?string
+{
+    $err = [
+        'Добавьте изображение в формате jpg или png',
+        'Неверный тип файла. Добавьте изображение в формате jpg или png'
+    ];
+    $file_types = ['image/jpeg', 'image/jpg', 'image/png'];
+    $file_temp = $_FILES['lot-img']['tmp_name'];
+    $file_name = $_FILES['lot-img']['name'];
+
+    if (is_uploaded_file($file_temp)) {
+        $file_type = mime_content_type($file_temp);
+        if (in_array($file_type, $file_types)) {
+            $file_path = __DIR__ . '/uploads/';
+            move_uploaded_file($file_temp, $file_path . $file_name);
+            $_FILES['lot-img']['img-url'] = 'uploads/' . $file_name;
+            return null;
+        }
+        return $err[1];
+    }
+    return $err[0];
+}
