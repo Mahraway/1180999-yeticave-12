@@ -182,10 +182,7 @@ function get_time_before(string $date): array
 /**
  * Функция проверки подлкючения К БД
  * Ограничения: функция принимает четыре аргумента - хост, имя пользователя, пароль и имя БД
- * @param string $host обычно localhost
- * @param string $user имя пользователя
- * @param string $pass пароль
- * @param string $db имя базы данных
+ * @param array $db_config данные для соединения с БД
  * @return mysqli в случае успеха возвращает идентификатор соединения
  * */
 function db_connect(array $db_config): mysqli
@@ -212,28 +209,26 @@ function db_connect(array $db_config): mysqli
  * @param array $categories массив с категориями
  * @return string $name возвращает возвращает название категории лота
  */
-function get_category_name(array $lot, array $categories): string
+function get_category_name(array $lot, array $categories): ?string
 {
     $result = $lot['category_id'];
     foreach($categories as $category) {
         switch ($result) {
             case $category['id']:
-                $category_name = $category['name'];
+                return $category['name'];
         break;
         }
     }
-    return $category_name;
+    return null;
 }
 
 /**
- * Принимает глабоальный массив $_GET.
- * Проверяет на сущестование элемента id массива
- * @param array $param глобальный массив $_GET
- * @return (int or null) в случае успешной проверки возвращает целое число, иначе null
+ * Проверяет возвращает значение параметра id из $_GET
+ * @return int|null в случае успешной проверки возвращает целое число
  */
-function getParamId(array $param): ?int
+function getParamId(): ?int
 {
-    $id = $param['id'] ?? null;
+    $id = $_GET['id'] ?? null;
     if (!$id || !is_numeric($id)) {
         return null;
     }
@@ -241,9 +236,9 @@ function getParamId(array $param): ?int
 }
 
 /**
- * Функция сохраняет введенное значение в текстовом поле
- * @param string $name
- * @return string
+ * Функция возвращает введенное значение текстового поля формы
+ * @param string $name название поля в форме добавления лота
+ * @return string возвращает введенное значение поля формы
  */
 function get_post_value(string $name) : string
 {
@@ -251,141 +246,183 @@ function get_post_value(string $name) : string
 }
 
 /**
- * Функция сохраняет выбранное значение в выпадающем списке SELECT
- * @param string $name
- * @return string
+ * Функция возвращает SELECT для списка поля формы добавленя лота
+ * @param string $category_id id категории лота
+ * @return string|null в случае успешной проверки, возвращает SELECT
  */
-function get_post_select(string $name) : ?string
+function get_post_select(string $category_id) : ?string
 {
-    if (isset($_POST['category'])) {
-        if ($name == $_POST['category']) {
+    if (isset($_POST['category_id'])) {
+        if ($category_id == $_POST['category_id']) {
             return 'selected';
         }
     }
     return null;
 }
 
+/**
+ * Функция загружает файл в папку 'uploads/' и записывает путь к файлу в суперглобальную переменную массива $_FILES
+ */
+function uploadFile()
+{
+    if (!empty($_FILES['image']['name'])) {
+        $file_name = $_FILES['image']['name'];
+        $file_temp = $_FILES['image']['tmp_name'];
+        $file_path = __DIR__ . '/uploads/';
+        move_uploaded_file($file_temp, $file_path . $file_name);
+        $_FILES['image']['url'] = 'uploads/' . $file_name;
+    }
+}
 
-/** Функция проверки полей формы лота, найденные ошибки записывает в массив
- * Если ошибок нет, возвращает пустой массив
- * @return array $error массив ошибок
+/**
+ * Функция проверки полей формы лота
+ * В ходе проверки записывает ошибки, если ошибок нет, то возвращает пустой массив.
+ * @return array $errors массив с кодами ошибок
  */
 function validateLotForm(): array
 {
     $errors = [];
+    $required = ['name','description', 'price', 'step', 'dt_end', 'category_id', 'image'];
 
-    // Обязаьельные поля
-    $required_fields = ['lot-name', 'message', 'lot-rate', 'lot-step', 'lot-date','category'];
+    $errors['name'] = validateLotName();
+    $errors['description'] = validateLotDescription();
+    $errors['price'] = validateLotPrice();
+    $errors['step'] = validateLotStep();
+    $errors['dt_end'] = validateLotDate();
+    $errors['category_id'] = validateLotCategory();
+    $errors['image'] = validateLotFile();
 
-    // Числовые поля
-    $numeric_fields = ['lot-rate', 'lot-step','category'];
-
-    foreach ($required_fields as $field) {
-        $error = validateFilled($field);
-        if ($error) {
-            $errors[$field] = $error;
-        }
-        $error = validateLength($field);
-        if ($error) {
-            $errors[$field] = $error;
+    for ($i = 0; $i < count($required); $i++) {
+        if ($errors[$required[$i]]) {
+            return $errors;
         }
     }
+    return $errors = [];
+}
 
-    foreach ($numeric_fields as $field) {
-        $_POST['lot-step'] = str_replace(',','.', $_POST['lot-step']);
-        $error = validateNumeric($field);
-        if ($error) {
-            $errors[$field] = $error;
-        }
+/**
+ * Функция проверки имени лота
+ * Проверяет заполнение и длину
+ * @return string|null
+ */
+function validateLotName(): ?string
+{
+    if (empty($_POST['name'])) {
+        return 'Введите название лота';
+    }
+    if (strlen($_POST['name']) > 255) {
+        return 'Введите не более 255 символов';
+    }
+    return null;
+}
+
+/**
+ * Функция проверки категории лота
+ * @return string|null
+ */
+function validateLotCategory(): ?string
+{
+    if (empty($_POST['category_id'])) {
+        return 'Выберите категорию';
     }
 
-    if (is_date_valid($_POST['lot-date'])) {
-        $user_date = strtotime($_POST['lot-date']);
-        if ($user_date - time() < 60*60*12) {
-            $errors['lot-date'] = 'Дата должна быть больше 1 день';
-        }
+    return null;
+}
+
+/**
+ * Функция проверки описания лота
+ * Проверяет заполненность и лимит строки до 1000 символов
+ * @return string|null
+ */
+function validateLotDescription(): ?string
+{
+    if (empty($_POST['description'])) {
+        return 'Напишите описание лота';
+    }
+    if (strlen($_POST['description']) > 1000) {
+        return 'Введите не более 1000 символов';
+    }
+    return null;
+}
+
+/**
+ * Функиця проверки поля с ценой
+ * Проверерка заполненности и на положительное число
+ * @return string|null
+ */
+function validateLotPrice(): ?string
+{
+    if (empty($_POST['price'])) {
+        return 'Введите начальную цену';
+    }
+    if ($_POST['price'] <= 0 || !is_numeric($_POST['price'])) {
+        return 'Введите число больше нуля';
+    }
+    return null;
+}
+
+/**
+ * Функиця проверки поля шага ставки
+ * Проверка заполненности и условие, что шаг ставки целое число большее нуля
+ * @return string|null
+ */
+function validateLotStep(): ?string
+{
+    $step = $_POST['step'];
+    if (empty($step)) {
+        return 'Введите шаг ставки';
     }
 
-    if (!is_null(validateFile())) {
-        $errors['lot-img'] = validateFile();
-    }
-
-    if ($_POST['lot-rate'] <= 0) {
-        $errors['lot-rate'] = 'Введите число больше нуля';
-    }
-
-    if (is_numeric($_POST['lot-step']) && $_POST['lot-step'] > 0) {
-        $_POST['lot-step'] = round($_POST['lot-step']);
+    if (is_numeric($step) && $step > 0) {
+        $_POST['step'] = round($step, 0);
     } else {
-        $errors['lot-step'] = 'Введите положительное число больше нуля';
+        return 'Введите целое число большее нуля';
     }
 
-    return $errors;
+    return null;
 }
 
-
-// Ниже функции проверки полей формы
-
-
-/** Проверка на заполненность поля
- * @param string $field ключ в массиве $_POST, поле формы
- * @return string|null если элемент не существует, записывает код ошибки в массив ошибок
+/**
+ * Функиця проверки даты окончания торгов
+ * Проверка заполненности и условия, в котором дата завершения торгов должна быть больше 1 дня
+ * @return string|null
  */
-function validateFilled(string $field): ?string
+function validateLotDate(): ?string
 {
-    if (empty($_POST[$field])) {
-        return 'Поле должно быть заполнено';
+    if (empty($_POST['dt_end'])) {
+        return 'Введите дату завершения торгов';
+    }
+
+    if (is_date_valid($_POST['dt_end'])) {
+        if ((strtotime($_POST['dt_end']) - time()) < 84600) {
+            return 'Дата должна быть больше одного дня';
+        }
     }
     return null;
 }
 
-/** Проверка число ли введено
- * @param string $field данные с поля формы
- * @return string|null если введно не число, то записывает код ошибки в массив ошибок
- */
-function validateNumeric(string $field): ?string
-{
-    if (!is_numeric($_POST[$field])) {
-        return 'Введите числовое значение';
-    }
-    return null;
-}
-
-/** Проевряет длинну строки, в БД ограничение до 255 символов
- * @param string $field данные с поля формы
- * @return string|null если введенная строка больше 255, записывает код ошибки в массив ошибок
- */
-function validateLength(string $field): ?string
-{
-    if (strlen($_POST[$field]) > 255 ) {
-        return 'Не более 255 символов';
-    }
-    return null;
-}
 
 /** Функция проверки добавляемого файла
  * @return string|null если проверка прошла успешно, то размещает в корневой папке uploads,
  *                     в случае ошибки записывает код ошибки в массив ошибок
  */
-function validateFile(): ?string
+function validateLotFile(): ?string
 {
     $err = [
-        'Добавьте изображение в формате jpg или png',
+        'Добавьте изображение',
         'Неверный тип файла. Добавьте изображение в формате jpg или png'
     ];
     $file_types = ['image/jpeg', 'image/jpg', 'image/png'];
-    $file_temp = $_FILES['lot-img']['tmp_name'];
-    $file_name = $_FILES['lot-img']['name'];
+    $file_temp = $_FILES['image']['tmp_name'];
 
     if (is_uploaded_file($file_temp)) {
         $file_type = mime_content_type($file_temp);
         if (in_array($file_type, $file_types)) {
-            $file_path = __DIR__ . '/uploads/';
-            move_uploaded_file($file_temp, $file_path . $file_name);
-            $_FILES['lot-img']['img-url'] = 'uploads/' . $file_name;
+            uploadFile();
             return null;
         }
         return $err[1];
     }
     return $err[0];
 }
+

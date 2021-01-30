@@ -43,7 +43,7 @@
       </ul>
     </nav>
     <section class="lot-item container">
-      <h2><?= $lot['name']; ?></h2>      
+      <h2><?= $lot['name']; ?></h2>
       <div class="lot-item__content">
         <div class="lot-item__left">
           <div class="lot-item__image">
@@ -59,7 +59,7 @@
             $time_finishing_class = ($timer[0] < 1) ? 'timer--finishing':  '';
             ?>
             <div class="lot-item__timer timer <?= $time_finishing_class?>">
-            <?php               
+            <?php
               echo $timer[0].":".sprintf("%02d", $timer[1]);
             ?>
             </div>

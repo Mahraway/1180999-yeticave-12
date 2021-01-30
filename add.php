@@ -6,7 +6,7 @@ $lots = get_active_lots($connection);
 
 $errors = [];
 
-if (isset($_POST['my_form'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $errors = validateLotForm();
 
