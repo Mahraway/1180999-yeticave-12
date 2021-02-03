@@ -81,7 +81,7 @@ function add_lot(mysqli $connection, array $lot): string
                 '".$lot['user_id']."',
                 '".$lot['category_id']."',
                  NOW(),
-                '".$lot['name']."',
+                '".($lot['name'])."',
                 '".$lot['description']."',
                 '".$_FILES['image']['url']."',
                 '".$lot['price']."',
@@ -103,18 +103,5 @@ function add_lot(mysqli $connection, array $lot): string
     $new_lot = mysqli_fetch_assoc($result);
     return $new_lot['id'];
 }
-
-function delete($connection)
-{
-    $id = $_GET['id'];
-    if (isset($_POST['del'])) {
-        $del = "DELETE FROM lots WHERE id = $id";
-        $res = mysqli_query($connection, $del);
-        if (!$res) {
-            exit('Error' . mysqli_error($connection));
-        }
-    }
-}
-
 
 

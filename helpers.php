@@ -226,7 +226,7 @@ function get_category_name(array $lot, array $categories): ?string
  * Проверяет возвращает значение параметра id из $_GET
  * @return int|null в случае успешной проверки возвращает целое число
  */
-function getParamId(): ?int
+function get_param_id(): ?int
 {
     $id = $_GET['id'] ?? null;
     if (!$id || !is_numeric($id)) {
@@ -262,35 +262,42 @@ function get_post_select(string $category_id) : ?string
 
 /**
  * Функция загружает файл в папку 'uploads/' и записывает путь к файлу в суперглобальную переменную массива $_FILES
+ * @param array $file массив с данными о файле
  */
-function uploadFile()
+function upload_file(array $file)
 {
-    if (!empty($_FILES['image']['name'])) {
-        $file_name = $_FILES['image']['name'];
-        $file_temp = $_FILES['image']['tmp_name'];
+    if (!empty($file['image']['name'])) {
+        $file_name = $file['image']['name'];
+        $file_temp = $file['image']['tmp_name'];
         $file_path = __DIR__ . '/uploads/';
-        move_uploaded_file($file_temp, $file_path . $file_name);
-        $_FILES['image']['url'] = 'uploads/' . $file_name;
+        $file_status = move_uploaded_file($file_temp, $file_path . $file_name);
+
+        if ($file_status == true) {
+            $_FILES['image']['url'] = 'uploads/' . $file_name;
+        } else {
+            exit('При загрузке файла, произошла критическая ошибка');
+        }
     }
 }
 
 /**
- * Функция проверки полей формы лота
+ * Функция проверки полей формы
  * В ходе проверки записывает ошибки, если ошибок нет, то возвращает пустой массив.
+ * @param array $formData данные из формы
  * @return array $errors массив с кодами ошибок
  */
-function validateLotForm(): array
+function validate_lot_form(array $formData): array
 {
     $errors = [];
     $required = ['name','description', 'price', 'step', 'dt_end', 'category_id', 'image'];
 
-    $errors['name'] = validateLotName();
-    $errors['description'] = validateLotDescription();
-    $errors['price'] = validateLotPrice();
-    $errors['step'] = validateLotStep();
-    $errors['dt_end'] = validateLotDate();
-    $errors['category_id'] = validateLotCategory();
-    $errors['image'] = validateLotFile();
+    $errors['name'] = validate_lot_name($formData['name']);
+    $errors['description'] = validate_lot_description($formData['description']);
+    $errors['price'] = validate_lot_price($formData['price']);
+    $errors['step'] = validate_lot_step($formData['step']);
+    $errors['dt_end'] = validate_lot_date($formData['dt_end']);
+    $errors['category_id'] = validate_lot_category($formData['category_id']);
+    $errors['image'] = validate_lot_file($_FILES);
 
     for ($i = 0; $i < count($required); $i++) {
         if ($errors[$required[$i]]) {
@@ -303,14 +310,15 @@ function validateLotForm(): array
 /**
  * Функция проверки имени лота
  * Проверяет заполнение и длину
- * @return string|null
+ * @param string $name данные из поля наименования формы
+ * @return string|null возвращает код ошибки, если он есть
  */
-function validateLotName(): ?string
+function validate_lot_name(string $name): ?string
 {
-    if (empty($_POST['name'])) {
+    if (empty($name)) {
         return 'Введите название лота';
     }
-    if (strlen($_POST['name']) > 255) {
+    if (strlen($name) > 255) {
         return 'Введите не более 255 символов';
     }
     return null;
@@ -318,28 +326,29 @@ function validateLotName(): ?string
 
 /**
  * Функция проверки категории лота
- * @return string|null
+ * @param string $id идентификатор картегрии лота
+ * @return string|null возвращает код ошибки, если он есть
  */
-function validateLotCategory(): ?string
+function validate_lot_category(string $id): ?string
 {
-    if (empty($_POST['category_id'])) {
+    if (empty($id)) {
         return 'Выберите категорию';
     }
-
     return null;
 }
 
 /**
  * Функция проверки описания лота
  * Проверяет заполненность и лимит строки до 1000 символов
- * @return string|null
+ * @param string $description данные из поля описания  лота
+ * @return string|null возвращает код ошибки, если он есть
  */
-function validateLotDescription(): ?string
+function validate_lot_description(string $description): ?string
 {
-    if (empty($_POST['description'])) {
+    if (empty($description)) {
         return 'Напишите описание лота';
     }
-    if (strlen($_POST['description']) > 1000) {
+    if (strlen($description) > 1000) {
         return 'Введите не более 1000 символов';
     }
     return null;
@@ -348,14 +357,15 @@ function validateLotDescription(): ?string
 /**
  * Функиця проверки поля с ценой
  * Проверерка заполненности и на положительное число
- * @return string|null
+ * @param $price string данные из формы поля начальная цена
+ * @return string|null возвращает код ошибки, если он есть
  */
-function validateLotPrice(): ?string
+function validate_lot_price(string $price): ?string
 {
-    if (empty($_POST['price'])) {
+    if (empty($price)) {
         return 'Введите начальную цену';
     }
-    if ($_POST['price'] <= 0 || !is_numeric($_POST['price'])) {
+    if ($price <= 0 || !is_numeric($price)) {
         return 'Введите число больше нуля';
     }
     return null;
@@ -364,11 +374,11 @@ function validateLotPrice(): ?string
 /**
  * Функиця проверки поля шага ставки
  * Проверка заполненности и условие, что шаг ставки целое число большее нуля
- * @return string|null
+ * @param string $step данные из формы поля шаг ставки
+ * @return string|null возвращает код ошибки, если он есть
  */
-function validateLotStep(): ?string
+function validate_lot_step(string $step): ?string
 {
-    $step = $_POST['step'];
     if (empty($step)) {
         return 'Введите шаг ставки';
     }
@@ -378,23 +388,23 @@ function validateLotStep(): ?string
     } else {
         return 'Введите целое число большее нуля';
     }
-
     return null;
 }
 
 /**
  * Функиця проверки даты окончания торгов
  * Проверка заполненности и условия, в котором дата завершения торгов должна быть больше 1 дня
- * @return string|null
+ * @param string $date данные из формы поля дата
+ * @return string|null возвращает код ошибки, если он есть
  */
-function validateLotDate(): ?string
+function validate_lot_date(string $date): ?string
 {
-    if (empty($_POST['dt_end'])) {
+    if (empty($date)) {
         return 'Введите дату завершения торгов';
     }
 
-    if (is_date_valid($_POST['dt_end'])) {
-        if ((strtotime($_POST['dt_end']) - time()) < 84600) {
+    if (is_date_valid($date)) {
+        if ((strtotime($date) - time()) < 43200) {
             return 'Дата должна быть больше одного дня';
         }
     }
@@ -403,22 +413,23 @@ function validateLotDate(): ?string
 
 
 /** Функция проверки добавляемого файла
+ * @param array $file данные добавленного файла
  * @return string|null если проверка прошла успешно, то размещает в корневой папке uploads,
- *                     в случае ошибки записывает код ошибки в массив ошибок
+ *                     иначе возвращает код ошибки
  */
-function validateLotFile(): ?string
+function validate_lot_file(array $file): ?string
 {
     $err = [
         'Добавьте изображение',
         'Неверный тип файла. Добавьте изображение в формате jpg или png'
     ];
     $file_types = ['image/jpeg', 'image/jpg', 'image/png'];
-    $file_temp = $_FILES['image']['tmp_name'];
+    $file_temp = $file['image']['tmp_name'];
 
     if (is_uploaded_file($file_temp)) {
         $file_type = mime_content_type($file_temp);
         if (in_array($file_type, $file_types)) {
-            uploadFile();
+            upload_file($file);
             return null;
         }
         return $err[1];

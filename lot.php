@@ -1,7 +1,7 @@
 <?php
 require_once('bootstrap.php');
 
-$id = getParamId();
+$id = get_param_id($_GET['id']);
 
 if (!$id) {
     header('Location: /404.php');

@@ -8,7 +8,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $errors = validateLotForm();
+    $errors = validate_lot_form($_POST);
 
     if (empty($errors)) {
         $id = add_lot($connection, $_POST);
