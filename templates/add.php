@@ -47,7 +47,7 @@
             <div class="form__container-two">
                 <div class="form__item <?= isset($error['name']) ? 'form__item--invalid' : '' ?>">
                     <label for="name">Наименование <sup>*</sup></label>
-                    <input id="name" type="text" name="name" placeholder="Введите наименование лота" value="<?= get_post_value('name') ?>" required>
+                    <input id="name" type="text" name="name" placeholder="Введите наименование лота" value="<?= get_post_value('name') ?>">
                     <span class="form__error"><?= $error['name'] ?? '' ?></span>
                 </div>
                 <div class="form__item <?= isset($error['category_id']) ? 'form__item--invalid' : '' ?>">

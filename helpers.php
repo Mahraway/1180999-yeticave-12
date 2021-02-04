@@ -261,10 +261,11 @@ function get_post_select(string $category_id) : ?string
 }
 
 /**
- * Функция загружает файл в папку 'uploads/' и записывает путь к файлу в суперглобальную переменную массива $_FILES
+ * Функция загружает файл в папку 'uploads/' и возвращает ссылку на загруженный файл
  * @param array $file массив с данными о файле
+ * @return string|null если файл успешно загружен, возвращает ссылку на загруженный файл
  */
-function upload_file(array $file)
+function upload_file(array $file): ?string
 {
     if (!empty($file['image']['name'])) {
         $file_name = $file['image']['name'];
@@ -273,18 +274,31 @@ function upload_file(array $file)
         $file_status = move_uploaded_file($file_temp, $file_path . $file_name);
 
         if ($file_status == true) {
-            $_FILES['image']['url'] = 'uploads/' . $file_name;
+            return 'uploads/' . $file_name;
         } else {
             exit('При загрузке файла, произошла критическая ошибка');
         }
     }
+    return null;
+}
+
+/**
+ * Функция фильтрации полей формы от спец. символов
+ * @param array $form_data данные из формы
+ * @return array возвращает отфильтрованный массив с данными
+ */
+function filter_form_fields(array $form_data): array
+{
+    return $clean = array_map(function ($var){
+        return htmlspecialchars($var, ENT_QUOTES);
+    }, $form_data);
 }
 
 /**
  * Функция проверки полей формы
  * В ходе проверки записывает ошибки, если ошибок нет, то возвращает пустой массив.
  * @param array $formData данные из формы
- * @return array $errors массив с кодами ошибок
+ * @return array возващает массив с кодами ошибок
  */
 function validate_lot_form(array $formData): array
 {
@@ -299,12 +313,14 @@ function validate_lot_form(array $formData): array
     $errors['category_id'] = validate_lot_category($formData['category_id']);
     $errors['image'] = validate_lot_file($_FILES);
 
-    for ($i = 0; $i < count($required); $i++) {
-        if ($errors[$required[$i]]) {
+    foreach ($required as $val) {
+        if ($errors[$val]) {
             return $errors;
         }
+        unset($errors[$val]);
     }
-    return $errors = [];
+
+    return $errors;
 }
 
 /**
@@ -412,10 +428,9 @@ function validate_lot_date(string $date): ?string
 }
 
 
-/** Функция проверки добавляемого файла
+/** Функция проверки загружаемого файла
  * @param array $file данные добавленного файла
- * @return string|null если проверка прошла успешно, то размещает в корневой папке uploads,
- *                     иначе возвращает код ошибки
+ * @return string|null возвращает код ошибки, если он есть
  */
 function validate_lot_file(array $file): ?string
 {
@@ -429,7 +444,6 @@ function validate_lot_file(array $file): ?string
     if (is_uploaded_file($file_temp)) {
         $file_type = mime_content_type($file_temp);
         if (in_array($file_type, $file_types)) {
-            upload_file($file);
             return null;
         }
         return $err[1];

@@ -67,7 +67,7 @@ function get_lot(mysqli $connection, int $id): ?array
 }
 
 /**
- * Функция добавляет в БД новый лот
+ * Функция добавляет в базу данных новый лот
  * @param mysqli $connection идентифиактор соединения БД
  * @param $lot array массив с информацией о лоте
  * @return string в случае успеха, возвращает id добавленного лота
@@ -77,19 +77,19 @@ function add_lot(mysqli $connection, array $lot): string
     $lot['user_id'] = 1;
 
     $add_query = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
-        VALUES (
-                '".$lot['user_id']."',
-                '".$lot['category_id']."',
-                 NOW(),
-                '".($lot['name'])."',
-                '".$lot['description']."',
-                '".$_FILES['image']['url']."',
-                '".$lot['price']."',
-                '".$lot['dt_end']."',
-                '".$lot['step']."'
-        );
-    ";
-    $new_lot = "SELECT id FROM lots WHERE NAME = '".$lot['name']."'";
+    VALUES (
+            '" . $lot['user_id'] . "',
+            '" . $lot['category_id'] . "',
+             NOW(),
+            '" . $lot['name'] . "',
+            '" . $lot['description'] . "',
+            '" . $lot['image_url'] . "',
+            '" . $lot['price'] . "',
+            '" . $lot['dt_end'] . "',
+            '" . $lot['step'] . "'
+    );
+";
+    $new_lot = "SELECT id FROM lots WHERE NAME = '" . $lot['name'] . "'";
 
     $result = mysqli_query($connection, $add_query);
     if (!$result) {
