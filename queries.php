@@ -91,16 +91,13 @@ function add_lot(mysqli $connection, array $lot): string
     ];
 
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
-    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_execute($stmt);
 
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        exit('Ошибка: ' . mysqli_error($connection));
+    if ($res == 0) {
+        exit('Ошибка: '. mysqli_error($connection));
     }
 
     return mysqli_insert_id($connection);
-
 }
 
 
