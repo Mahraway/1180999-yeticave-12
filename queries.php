@@ -74,28 +74,33 @@ function get_lot(mysqli $connection, int $id): ?array
  */
 function add_lot(mysqli $connection, array $lot): string
 {
-    $lot['user_id'] = 1;
 
-    $add_query = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
-    VALUES (
-            '" . $lot['user_id'] . "',
-            '" . $lot['category_id'] . "',
-             NOW(),
-            '" . $lot['name'] . "',
-            '" . $lot['description'] . "',
-            '" . $lot['image_url'] . "',
-            '" . $lot['price'] . "',
-            '" . $lot['dt_end'] . "',
-            '" . $lot['step'] . "'
-    );
-";
+    $sql = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
+    VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    $result = mysqli_query($connection, $add_query);
+    $data = [
+        $user = 1,
+        $category = $lot['category_id'],
+        $dt_add = date('Y:m:d h:i:s'),
+        $name = $lot['name'],
+        $description = $lot['description'],
+        $image = $lot['image_url'],
+        $price = $lot['price'],
+        $date = $lot['dt_end'],
+        $step = $lot['step']
+    ];
+
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
     if (!$result) {
-        exit('Ошибка ' . mysqli_error($connection));
+        exit('Ошибка: ' . mysqli_error($connection));
     }
 
     return mysqli_insert_id($connection);
+
 }
 
 
