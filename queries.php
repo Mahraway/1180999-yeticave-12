@@ -89,19 +89,13 @@ function add_lot(mysqli $connection, array $lot): string
             '" . $lot['step'] . "'
     );
 ";
-    $new_lot = "SELECT id FROM lots WHERE NAME = '" . $lot['name'] . "'";
 
     $result = mysqli_query($connection, $add_query);
     if (!$result) {
         exit('Ошибка ' . mysqli_error($connection));
     }
 
-    $result = mysqli_query($connection, $new_lot);
-    if (!$result) {
-        exit('Ошибка ' . mysqli_error($connection));
-    }
-    $new_lot = mysqli_fetch_assoc($result);
-    return $new_lot['id'];
+    return mysqli_insert_id($connection);
 }
 
 

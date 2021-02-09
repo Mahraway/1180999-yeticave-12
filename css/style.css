@@ -156,11 +156,12 @@ main.container {
 /* Хедер */
 
 .main-header {
-  padding: 30px 0 29px;
+  padding: 30px 0 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .main-header__container {
+  margin-bottom: 29px;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;

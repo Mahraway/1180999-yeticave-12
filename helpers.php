@@ -292,6 +292,7 @@ function filter_form_fields(array $form_data): array
     return $clean = array_map(function ($var){
         return htmlspecialchars($var, ENT_QUOTES);
     }, $form_data);
+
 }
 
 /**

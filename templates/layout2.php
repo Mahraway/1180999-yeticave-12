@@ -5,6 +5,7 @@
     <title><?= $title ?></title>
     <link href="../css/normalize.min.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/flatpickr.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="page-wrapper">
@@ -40,7 +41,17 @@
             <?php endif; ?>
             </nav>
         </div>
+        <nav class="nav">
+            <ul class="nav__list container">
+                <?php foreach ($categories as $category) : ?>
+                    <li class="nav__item">
+                        <a href="all-lots.html"><?= $category['name'] ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
     </header>
+
     <main class="container"><?= $content; ?></main>
 </div>
 

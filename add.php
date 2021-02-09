@@ -8,18 +8,22 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+//    $form_data = filter_form_fields($connection, $_POST);
     $form_data = filter_form_fields($_POST);
     $errors = validate_lot_form($form_data);
 
     if (empty($errors)) {
-        $_POST['image_url'] = upload_file($_FILES);
-        $id = add_lot($connection, $_POST);
+        $form_data['image_url'] = upload_file($_FILES);
+        $id = add_lot($connection, $form_data);
         header("Location: /lot.php?id=$id");
     }
 }
+
+$main_page = include_template('add.php', ['error' => $errors, 'categories' => $categories]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
-$add_lot_page = include_template('add.php', [
+$layout_content = include_template('layout2.php', [
     'categories' => $categories,
+    'content' => $main_page,
     'footer' => $main_footer,
     'title' => $title,
     'user_name' => $user_name,
@@ -27,4 +31,4 @@ $add_lot_page = include_template('add.php', [
     'error' => $errors,
 ]);
 
-print ($add_lot_page);
+print ($layout_content);
