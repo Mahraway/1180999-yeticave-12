@@ -93,7 +93,7 @@ function add_lot(mysqli $connection, array $lot): string
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
     $res = mysqli_stmt_execute($stmt);
 
-    if ($res == 0) {
+    if (!$res) {
         exit('Ошибка: '. mysqli_error($connection));
     }
 

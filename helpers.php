@@ -283,16 +283,21 @@ function upload_file(array $file): ?string
 }
 
 /**
- * Функция фильтрации полей формы от спец. символов
+ * Функция фильтрации данных из формы
  * @param array $form_data данные из формы
  * @return array возвращает отфильтрованный массив с данными
  */
 function filter_form_fields(array $form_data): array
 {
-    return $clean = array_map(function ($var){
+    $form_data = array_map(function ($var){
         return htmlspecialchars($var, ENT_QUOTES);
     }, $form_data);
 
+    $form_data['category_id'] = (int)$form_data['category_id'];
+    $form_data['price'] = (int)$form_data['price'];
+    $form_data['step'] = (int)$form_data['step'];
+
+    return $form_data;
 }
 
 /**
