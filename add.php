@@ -8,7 +8,6 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-//    $form_data = filter_form_fields($connection, $_POST);
     $form_data = filter_form_fields($_POST);
     $errors = validate_lot_form($form_data);
 
