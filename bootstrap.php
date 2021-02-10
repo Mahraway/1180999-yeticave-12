@@ -10,9 +10,9 @@ $is_auth = rand(0, 1);
 $user_name = 'Рашид';
 $title = 'YetiCave';
 
+require_once('queries.php');
 require_once('helpers.php');
 require_once('config.php');
-require_once('queries.php');
 
 $config = require 'config.php';
 

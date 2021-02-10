@@ -156,11 +156,12 @@ main.container {
 /* Хедер */
 
 .main-header {
-  padding: 30px 0 29px;
+  padding: 30px 0 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .main-header__container {
+  margin-bottom: 29px;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -601,9 +602,15 @@ main.container {
   border-bottom: 1px solid #e1e6e7;
 }
 
+.lot__image img,
+.lot-item__image img
+{
+  display: block;
+  margin: 0 auto;
+  width: auto;
+}
 .lot__image img {
-  width: 100%;
-  height: 100%;
+  max-width: 350px;
 }
 
 .lot__info {
@@ -864,6 +871,7 @@ input:invalid .form__error{
   display: block;
 }
 
+
 .form__item--invalid textarea,
 .form__item--invalid input {
   background: #ffffff url("../img/error.svg") 97% 11px no-repeat;
@@ -883,8 +891,16 @@ input:invalid .form__error{
   background: #ffffff url("../img/error.svg") 702px 11px no-repeat;
 }
 
+.form__item--file.form__item--invalid {
+  background: url("../img/error.svg") 27% 3px no-repeat;
+}
+
 .form__input-file {
   display: inline-block;
+}
+
+.form__input-file.file_name {
+  margin-left: 10px;
 }
 
 .form__input-file input {

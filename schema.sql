@@ -5,10 +5,10 @@ CREATE DATABASE yeticave
 USE yeticave;
 
 CREATE TABLE categories (
-	id INT AUTO_INCREMENT, 
-	name VARCHAR(255) NOT NULL, 
+	id INT AUTO_INCREMENT,
+	name VARCHAR(255) NOT NULL,
 	code VARCHAR(255) NOT NULL,
-	PRIMARY KEY (id) 
+	PRIMARY KEY (id)
 );
 
 CREATE TABLE users (
@@ -18,7 +18,7 @@ CREATE TABLE users (
 	email VARCHAR(255) NOT NULL UNIQUE,
 	pass VARCHAR(255) NOT NULL,
 	contacts VARCHAR(255) NOT NULL,
-	PRIMARY KEY (id) 
+	PRIMARY KEY (id)
 );
 
 CREATE TABLE lots (
@@ -26,18 +26,18 @@ CREATE TABLE lots (
 	user_id INT NOT NULL,
 	category_id INT NOT NULL,
 	name VARCHAR(255) NOT NULL,
-	description VARCHAR(255) NOT NULL,
+	description VARCHAR(1000) NOT NULL,
 	image VARCHAR(255) NOT NULL,
 	price INT NOT NULL,
 	step INT NOT NULL,
 	dt_add DATETIME NOT NULL,
 	dt_end DATETIME NOT NULL,
 	PRIMARY KEY (id),
-	INDEX lots_name_idx (name),   		
-	INDEX lots_category_idx (category_id),	
-	INDEX lots_user_idx (user_id), 			
-	FOREIGN KEY (category_id) REFERENCES categories (id),  
-	FOREIGN KEY (user_id) REFERENCES users (id)				
+	INDEX lots_name_idx (name),
+	INDEX lots_category_idx (category_id),
+	INDEX lots_user_idx (user_id),
+	FOREIGN KEY (category_id) REFERENCES categories (id),
+	FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE bets (
@@ -46,11 +46,11 @@ CREATE TABLE bets (
 	lot_id INT NOT NULL,
 	dt_add DATETIME,
 	price INT NOT NULL,
-	PRIMARY KEY (id), 
+	PRIMARY KEY (id),
 	INDEX bets_user_idx (user_id),
-	INDEX bets_lot_idx (lot_id), 								
-	FOREIGN KEY (user_id) REFERENCES users (id),	
-	FOREIGN KEY (lot_id) REFERENCES lots (id)		
+	INDEX bets_lot_idx (lot_id),
+	FOREIGN KEY (user_id) REFERENCES users (id),
+	FOREIGN KEY (lot_id) REFERENCES lots (id)
 );
- 
+
 
