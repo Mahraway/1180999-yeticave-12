@@ -2,23 +2,21 @@
 require_once 'bootstrap.php';
 
 $categories = get_categories($connection);
-$lots = get_active_lots($connection);
-
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $form_data = filter_form_fields($_POST);
-    $errors = validate_lot_form($form_data);
+    $errors = validate_reg_form($connection, $form_data);
 
     if (empty($errors)) {
-        $form_data['image_url'] = upload_file($_FILES);
-        $id = add_lot($connection, $form_data);
-        header("Location: /lot.php?id=$id");
+        $form_data['password'] = password_hash($form_data['password'], PASSWORD_DEFAULT);
+        add_user($connection, $form_data);
+        header("Location: /pages/login.html");
     }
 }
 
-$main_page = include_template('add.php', ['error' => $errors, 'categories' => $categories]);
+$main_page = include_template('sign-up.php', ['error' => $errors]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
 $layout_content = include_template('layout2.php', [
     'categories' => $categories,
@@ -30,3 +28,4 @@ $layout_content = include_template('layout2.php', [
 ]);
 
 print ($layout_content);
+

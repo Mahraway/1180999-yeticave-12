@@ -282,6 +282,7 @@ function upload_file(array $file): ?string
     return null;
 }
 
+
 /**
  * Функция фильтрации данных из формы
  * @param array $form_data данные из формы
@@ -293,30 +294,147 @@ function filter_form_fields(array $form_data): array
         return htmlspecialchars($var, ENT_QUOTES);
     }, $form_data);
 
-    $form_data['category_id'] = (int)$form_data['category_id'];
-    $form_data['price'] = (int)$form_data['price'];
-    $form_data['step'] = (int)$form_data['step'];
+    isset($form_data['category_id']) ? $form_data['category_id'] = (int)$form_data['category_id'] : null;
+    isset($form_data['price']) ? $form_data['price'] = (int)$form_data['price'] : null;
+    isset($form_data['step']) ? $form_data['step'] = (int)$form_data['step'] : null;
 
     return $form_data;
 }
 
 /**
- * Функция проверки полей формы
+ * Функция проверки проверки полей формы регистрации
+ * @param mysqli $connection идентификатор соединения с базой данных
+ * @param array $form_data данные из формы регистрации
+ * @return array возвращает массив с кодами ошибок
+ */
+function validate_reg_form(mysqli $connection, array $form_data): array
+{
+    $errors = [];
+    $required = ['email', 'password', 'name', 'contacts'];
+
+    $errors['email'] = validate_reg_email($connection, $form_data['email']);
+    $errors['password'] = validate_reg_password($form_data['password']);
+    $errors['name'] = validate_reg_name($form_data['name']);
+    $errors['contacts'] = validate_reg_contacts($form_data['contacts']);
+
+    foreach ($required as $val) {
+        if ($errors[$val]) {
+            return $errors;
+        }
+        unset($errors[$val]);
+    }
+
+    return $errors;
+}
+
+/**
+ * Проверяет поле email, а так же на уникальность введенного email
+ * @param mysqli $connection идентификатор соединения
+ * @param string $email данные из поля email
+ * @return string|null возвращает код ошибки, если он есть
+ */
+function validate_reg_email(mysqli $connection, string $email): ?string
+{
+    if (empty($email)) {
+        return 'Введите ваш email';
+    }
+
+    if (strlen($email) > 255) {
+        return 'Введите не более 255 символов';
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return 'Введите корректный email';
+    }
+
+    $sql = "SELECT * FROM `users` WHERE email = '$email'";
+    $result = mysqli_query($connection, $sql);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    $row =  mysqli_fetch_assoc($result);
+
+    if (!empty($row['id'])) {
+        if ($row['email'] === $email) {
+            return 'Пользователь с таким email уже существует';
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки пароля
+ * @param string $password данные из поля пароль
+ * @return string|null возвращает код ошибки, если он есть
+ */
+function validate_reg_password(string $password): ?string
+{
+    if (empty($password)) {
+        return 'Введите пароль';
+    }
+    if (strlen($password) > 255) {
+        return 'Введите не более 255 символов';
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки поля имя
+ * @param string $name данные из поля имя
+ * @return string|null возвращает код ошибки, если он есть
+ */
+function validate_reg_name(string $name): ?string
+{
+    if (empty($name)) {
+        return 'Введите ваше имя';
+    }
+
+    if (strlen($name) > 255) {
+        return 'Введите не более 255 символов';
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки поля контакты
+ * @param string $contacts данные из поля контакты
+ * @return string|null возвращает код ошибки, если он есть
+ */
+function validate_reg_contacts(string $contacts): ?string
+{
+    if (empty($contacts)) {
+        return 'Укажите контакты для связи';
+    }
+
+    if (strlen($contacts) > 255) {
+        return 'Введите не более 255 символов';
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки полей формы добавления лота
  * В ходе проверки записывает ошибки, если ошибок нет, то возвращает пустой массив.
- * @param array $formData данные из формы
+ * @param array $form_data данные из формы
  * @return array возващает массив с кодами ошибок
  */
-function validate_lot_form(array $formData): array
+function validate_lot_form(array $form_data): array
 {
     $errors = [];
     $required = ['name','description', 'price', 'step', 'dt_end', 'category_id', 'image'];
 
-    $errors['name'] = validate_lot_name($formData['name']);
-    $errors['description'] = validate_lot_description($formData['description']);
-    $errors['price'] = validate_lot_price($formData['price']);
-    $errors['step'] = validate_lot_step($formData['step']);
-    $errors['dt_end'] = validate_lot_date($formData['dt_end']);
-    $errors['category_id'] = validate_lot_category($formData['category_id']);
+    $errors['name'] = validate_lot_name($form_data['name']);
+    $errors['description'] = validate_lot_description($form_data['description']);
+    $errors['price'] = validate_lot_price($form_data['price']);
+    $errors['step'] = validate_lot_step($form_data['step']);
+    $errors['dt_end'] = validate_lot_date($form_data['dt_end']);
+    $errors['category_id'] = validate_lot_category($form_data['category_id']);
     $errors['image'] = validate_lot_file($_FILES);
 
     foreach ($required as $val) {

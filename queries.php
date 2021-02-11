@@ -76,7 +76,7 @@ function add_lot(mysqli $connection, array $lot): string
 {
 
     $sql = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
-    VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $data = [
         $user = 1,
@@ -100,4 +100,28 @@ function add_lot(mysqli $connection, array $lot): string
     return mysqli_insert_id($connection);
 }
 
+/**
+ * Добавляет нового пользователя в базу данных
+ * @param mysqli $connection идентификатор соединения
+ * @param array $user данные о пользователе
+ */
+function add_user(mysqli $connection, array $user)
+{
+    $sql = "INSERT INTO users (dt_add, name, email, pass, contacts)
+            VALUES ( ?, ?, ?, ?, ?)";
 
+    $data = [
+        $dt_add = date('Y:m:d h:i:s'),
+        $name = $user['name'],
+        $email = $user['email'],
+        $password = $user['password'],
+        $contacts = $user['contacts']
+    ];
+
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    $res = mysqli_stmt_execute($stmt);
+
+    if (!$res) {
+        exit('Ошибка: '. mysqli_error($connection));
+    }
+}
