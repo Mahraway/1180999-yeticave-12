@@ -1,4 +1,27 @@
 <?php
+
+/**
+ * Функция проверки подлкючения К БД
+ * Ограничения: функция принимает четыре аргумента - хост, имя пользователя, пароль и имя БД
+ * @param array $db_config данные для соединения с БД
+ * @return mysqli в случае успеха возвращает идентификатор соединения
+ * */
+function db_connect(array $db_config): mysqli
+{
+    $connection = mysqli_connect(
+        $db_config['host'],
+        $db_config['user'],
+        $db_config['password'],
+        $db_config['database']
+    );
+
+    if (!$connection) {
+        exit('<br>Соединение не удалось: '. mysqli_connect_error());
+    }
+    mysqli_set_charset($connection, "UTF8");
+    return $connection;
+}
+
 /**
  * Функция формирования самых новых и активных лотов на главной странице
  * @param mysqli $connection - идентификатор соединения с БД
@@ -79,15 +102,15 @@ function add_lot(mysqli $connection, array $lot): string
             VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $data = [
-        $user = 1,
-        $category = $lot['category_id'],
-        $dt_add = date('Y:m:d h:i:s'),
-        $name = $lot['name'],
-        $description = $lot['description'],
-        $image = $lot['image_url'],
-        $price = $lot['price'],
-        $date = $lot['dt_end'],
-        $step = $lot['step']
+        1, // TODO: user_id
+        $lot['category_id'],
+        date('Y:m:d h:i:s'),
+        $lot['name'],
+        $lot['description'],
+        $lot['image_url'],
+        $lot['price'],
+        $lot['dt_end'],
+        $lot['step']
     ];
 
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
@@ -111,11 +134,11 @@ function add_user(mysqli $connection, array $user)
             VALUES ( ?, ?, ?, ?, ?)";
 
     $data = [
-        $dt_add = date('Y:m:d h:i:s'),
-        $name = $user['name'],
-        $email = $user['email'],
-        $password = $user['password'],
-        $contacts = $user['contacts']
+        date('Y:m:d h:i:s'),
+        $user['name'],
+        $user['email'],
+        $user['password'],
+        $user['contacts']
     ];
 
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
@@ -124,4 +147,77 @@ function add_user(mysqli $connection, array $user)
     if (!$res) {
         exit('Ошибка: '. mysqli_error($connection));
     }
+}
+
+
+/**
+ * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return mysqli_stmt Подготовленное выражение
+ */
+function db_get_prepare_stmt($link, $sql, $data = []) {
+    $stmt = mysqli_prepare($link, $sql);
+
+    if ($stmt === false) {
+        $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link);
+        die($errorMsg);
+    }
+
+    if ($data) {
+        $types = '';
+        $stmt_data = [];
+
+        foreach ($data as $value) {
+            $type = 's';
+
+            if (is_int($value)) {
+                $type = 'i';
+            }
+            else if (is_string($value)) {
+                $type = 's';
+            }
+            else if (is_double($value)) {
+                $type = 'd';
+            }
+
+            if ($type) {
+                $types .= $type;
+                $stmt_data[] = $value;
+            }
+        }
+
+        $values = array_merge([$stmt, $types], $stmt_data);
+
+        $func = 'mysqli_stmt_bind_param';
+        $func(...$values);
+
+        if (mysqli_errno($link) > 0) {
+            $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link);
+            die($errorMsg);
+        }
+    }
+
+    return $stmt;
+}
+
+/**
+ * Возвращает массив с данными пользователя по e-mqil
+ * @param mysqli $connection идентификатор соединения БД
+ * @param string $email проверяемый емайл
+ * @return array|null возвращает массив с данными о пользователе
+ */
+function get_user_by_email(mysqli $connection, string $email): ?array
+{
+    $sql = "SELECT * FROM `users` WHERE email = '$email'";
+    $result = mysqli_query($connection, $sql);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    return mysqli_fetch_assoc($result);
 }

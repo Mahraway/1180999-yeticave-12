@@ -1,15 +1,17 @@
+<?php
+/**
+ * @var string $promo_menu шаблон блока promo_menu
+ * @var array $lots массив с активными лотами
+ *
+ */
+?>
+
     <section class="promo">
         <h2 class="promo__title">Нужен стафф для катки?</h2>
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
-           
+
         <!--заполните этот список из массива категорий-->
-        <ul class="promo__list">
-        <?php foreach($categories as $category): ?>      
-            <li class="promo__item promo__item--<?= $category['code']?>">
-                <a class="promo__link" href="pages/all-lots.html"><?= $category['name'] ?></a>
-            </li>
-        <?php endforeach; ?>
-        </ul>
+        <?= $promo_menu; ?>
     </section>
     <section class="lots">
         <div class="lots__header">
@@ -39,12 +41,12 @@
 
                         </div>
                         <!-- Формаирование класса с красной плашкой -->
-                        <?php 
+                        <?php
                         $timer = get_time_before($lot['dt_end']);
                         $time_finishing_class = ($timer[0] < 1) ? 'timer--finishing':  '';
                         ?>
                         <!-- Вывод таймера лота -->
-                        <div class="lot__timer timer <?= $time_finishing_class; ?>">   
+                        <div class="lot__timer timer <?= $time_finishing_class; ?>">
                         <?= $timer[0].":".sprintf("%02d", $timer[1]); ?>
                         </div>
                     </div>

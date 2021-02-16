@@ -1,4 +1,14 @@
 <?php
+/**
+ * Описание переменных
+ * @var mysqli $connection идентификатор соединения БД
+ * @var string $title заголовок страницы
+ * @var int $is_auth флаг авторизации
+ * @var string $user_name имя пользователя
+ * @var string $content шаблон главной страницы
+ * @var string $footer шаблон футера
+ */
+
 require_once 'bootstrap.php';
 
 $categories = get_categories($connection);
@@ -16,10 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
 $main_page = include_template('sign-up.php', ['error' => $errors]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
-$layout_content = include_template('layout2.php', [
-    'categories' => $categories,
+$layout_content = include_template('layout.php', [
+    'top_menu' => $main_menu,
     'content' => $main_page,
     'footer' => $main_footer,
     'title' => $title,

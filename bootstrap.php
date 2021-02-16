@@ -10,8 +10,12 @@ $is_auth = rand(0, 1);
 $user_name = 'Рашид';
 $title = 'YetiCave';
 
-require_once('queries.php');
-require_once('helpers.php');
+require_once (__DIR__ . '/functions/db.php');
+require_once (__DIR__ . '/functions/views.php');
+require_once (__DIR__ . '/functions/validators.php');
+require_once (__DIR__ . '/functions/filters.php');
+require_once (__DIR__ . '/functions/file.php');
+require_once (__DIR__ . '/functions/requests.php');
 require_once('config.php');
 
 $config = require 'config.php';

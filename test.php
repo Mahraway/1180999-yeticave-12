@@ -6,13 +6,15 @@ $categories = get_categories($connection);
 function get_user(mysqli $connection, string $user_id): ?array
 {
     if ($user_id) {
-        $sql = "SELECT * FROM users WHERE id='$user_id'";
+        $sql = "SELECT * FROM users;";
         $res = mysqli_query($connection, $sql);
         if (!$res) {
             exit('Ошибка' . mysqli_error($connection));
         }
 
-        return mysqli_fetch_assoc($res);
+        $res = mysqli_fetch_assoc($res);
+        print_r($res);
+        return $res;
     }
     header('Location: 404.php');
 }
