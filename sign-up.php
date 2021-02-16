@@ -9,22 +9,34 @@
  * @var string $footer шаблон футера
  */
 
-require_once('bootstrap.php');
+require_once 'bootstrap.php';
 
-$lots = get_active_lots($connection);
 $categories = get_categories($connection);
+$errors = [];
 
-$main_menu = include_template('/menu/promo_menu.php', ['categories' => $categories]);
-$main_page = include_template('main.php', ['promo_menu' => $main_menu, 'lots' => $lots]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $form_data = filter_form_fields($_POST);
+    $errors = validate_reg_form($connection, $form_data);
+
+    if (empty($errors)) {
+        $form_data['password'] = password_hash($form_data['password'], PASSWORD_DEFAULT);
+        add_user($connection, $form_data);
+        header("Location: /pages/login.html");
+    }
+}
+
+$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
+$main_page = include_template('sign-up.php', ['error' => $errors]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
 $layout_content = include_template('layout.php', [
+    'top_menu' => $main_menu,
     'content' => $main_page,
     'footer' => $main_footer,
     'title' => $title,
     'user_name' => $user_name,
     'is_auth' => $is_auth,
-    ]
-);
+]);
 
-print($layout_content);
+print ($layout_content);
 

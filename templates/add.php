@@ -1,4 +1,11 @@
-<form class="form form--add-lot container <?= !empty($error) ? 'form--invalid' : '' ?>" action="add.php" method="post" enctype="multipart/form-data">
+<?php
+/**
+ * @var array $categories массив с категориями
+ */
+?>
+
+<form
+    class="form form--add-lot container <?= !empty($error) ? 'form--invalid' : '' ?>" action="add.php" method="post" enctype="multipart/form-data">
     <h2>Добавление лота</h2>
     <div class="form__container-two">
         <div class="form__item <?= isset($error['name']) ? 'form__item--invalid' : '' ?>">
@@ -30,14 +37,9 @@
                 Добавить
             </label>
         </div>
-
-        <span class="form__input-file file_name">
-                    <?= $_FILES['image']['name'] ?? ''?>
-                </span>
-
+        <span class="form__input-file file_name"><?= $_FILES['image']['name'] ?? ''?></span>
         <span class="form__error"><?= $error['image'] ?? ''?></span>
     </div>
-
     <div class="form__container-three">
         <div class="form__item form__item--small <?= isset($error['price']) ? 'form__item--invalid' : '' ?>">
             <label for="price">Начальная цена <sup>*</sup></label>

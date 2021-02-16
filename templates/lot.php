@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $lot массив с данными лота
+ * @var array $categories массив с категориями
+ */
+?>
     <section class="lot-item container">
       <h2><?= $lot['name']; ?></h2>
       <div class="lot-item__content">
