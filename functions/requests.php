@@ -2,11 +2,12 @@
 
 /**
  * Проверяет возвращает значение параметра id из $_GET
+ * @param string $id параметр id
  * @return int|null в случае успешной проверки возвращает целое число
  */
-function get_param_id(): ?int
+function get_param_id(string $id): ?int
 {
-    $id = $_GET['id'] ?? null;
+    $id = $id ?? null;
     if (!$id || !is_numeric($id)) {
         return null;
     }

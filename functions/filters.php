@@ -1,7 +1,10 @@
 <?php
-
-
-function filter_form_lot (array $form_data) : array
+/**
+ * Функция фильтрации данных из формы добавления лота
+ * @param array $form_data
+ * @return array
+ */
+function filter_form_lot(array $form_data) : array
 {
     $form_data = filter_form_fields($form_data);
 

@@ -12,7 +12,7 @@ function upload_file(array $file): ?string
         $file_path = __DIR__ . '/uploads/';
         $file_status = move_uploaded_file($file_temp, $file_path . $file_name);
 
-        if ($file_status == true) {
+        if ($file_status) {
             return 'uploads/' . $file_name;
         } else {
             exit('При загрузке файла, произошла критическая ошибка');

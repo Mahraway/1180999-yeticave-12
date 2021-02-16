@@ -1,4 +1,12 @@
 <?php
+/**
+ * Описание переменных
+ * @var mysqli $connection идентификатор соединения БД
+ * @var string $title заголовок страницы
+ * @var int $is_auth флаг авторизации
+ * @var string $user_name имя пользователя
+ */
+
 require_once('bootstrap.php');
 
 $id = get_param_id($_GET['id']);
@@ -15,7 +23,7 @@ if (!$lot) {
 }
 $main_page = include_template('lot.php',['lot' => $lot, 'categories' => $categories]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
-$layout_content = include_template('layout2.php', [
+$layout_content = include_template('layout.php', [
         'content' => $main_page,
         'categories' => $categories,
         'footer' => $main_footer,

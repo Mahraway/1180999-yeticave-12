@@ -93,9 +93,9 @@ function get_lot(mysqli $connection, int $id): ?array
  * Функция добавляет в базу данных новый лот
  * @param mysqli $connection идентифиактор соединения БД
  * @param $lot array массив с информацией о лоте
- * @return string в случае успеха, возвращает id добавленного лота
+ * @return int в случае успеха, возвращает id добавленного лота
  */
-function add_lot(mysqli $connection, array $lot): string
+function add_lot(mysqli $connection, array $lot): int
 {
 
     $sql = "INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step)
@@ -128,7 +128,7 @@ function add_lot(mysqli $connection, array $lot): string
  * @param mysqli $connection идентификатор соединения
  * @param array $user данные о пользователе
  */
-function add_user(mysqli $connection, array $user)
+function add_user(mysqli $connection, array $user) : void
 {
     $sql = "INSERT INTO users (dt_add, name, email, pass, contacts)
             VALUES ( ?, ?, ?, ?, ?)";
@@ -149,20 +149,19 @@ function add_user(mysqli $connection, array $user)
     }
 }
 
-
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
- *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function db_get_prepare_stmt(mysqli $link,string $sql,array $data = []) : mysqli_stmt
+{
     $stmt = mysqli_prepare($link, $sql);
 
-    if ($stmt === false) {
+    if (!$stmt) {
         $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link);
         die($errorMsg);
     }
@@ -205,7 +204,7 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 }
 
 /**
- * Возвращает массив с данными пользователя по e-mqil
+ * Возвращает массив с данными пользователя по e-mail
  * @param mysqli $connection идентификатор соединения БД
  * @param string $email проверяемый емайл
  * @return array|null возвращает массив с данными о пользователе
