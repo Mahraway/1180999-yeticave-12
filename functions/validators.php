@@ -21,23 +21,21 @@ function is_date_valid(string $date) : bool {
     return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
 }
 
-
-
 /**
  * Функция проверки проверки полей формы регистрации
  * @param mysqli $connection идентификатор соединения с базой данных
  * @param array $form_data данные из формы регистрации
  * @return array возвращает массив с кодами ошибок
  */
-function validate_reg_form(mysqli $connection, array $form_data): array
+function validate_account_form(mysqli $connection, array $form_data): array
 {
     $errors = [];
     $required = ['email', 'password', 'name', 'contacts'];
 
-    $errors['email'] = validate_reg_email($connection, $form_data['email']);
-    $errors['password'] = validate_reg_password($form_data['password']);
-    $errors['name'] = validate_reg_name($form_data['name']);
-    $errors['contacts'] = validate_reg_contacts($form_data['contacts']);
+    $errors['email'] = validate_account_email($connection, $form_data['email']);
+    $errors['password'] = validate_account_password($form_data['password']);
+    $errors['name'] = validate_account_name($form_data['name']);
+    $errors['contacts'] = validate_account_contacts($form_data['contacts']);
 
     foreach ($required as $val) {
         if ($errors[$val]) {
@@ -55,7 +53,7 @@ function validate_reg_form(mysqli $connection, array $form_data): array
  * @param string $email данные из поля email
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_reg_email(mysqli $connection, string $email): ?string
+function validate_account_email(mysqli $connection, string $email): ?string
 {
     if (empty($email)) {
         return 'Введите ваш email';
@@ -66,7 +64,7 @@ function validate_reg_email(mysqli $connection, string $email): ?string
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        return 'Введите действительный email';
+        return 'Введите существующий email';
     }
 
     $user = get_user_by_email($connection, $email);
@@ -77,12 +75,13 @@ function validate_reg_email(mysqli $connection, string $email): ?string
     return null;
 }
 
+
 /**
  * Функция проверки пароля
  * @param string $password данные из поля пароль
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_reg_password(string $password): ?string
+function validate_account_password(string $password): ?string
 {
     if (empty($password)) {
         return 'Введите пароль';
@@ -99,7 +98,7 @@ function validate_reg_password(string $password): ?string
  * @param string $name данные из поля имя
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_reg_name(string $name): ?string
+function validate_account_name(string $name): ?string
 {
     if (empty($name)) {
         return 'Введите ваше имя';
@@ -117,7 +116,7 @@ function validate_reg_name(string $name): ?string
  * @param string $contacts данные из поля контакты
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_reg_contacts(string $contacts): ?string
+function validate_account_contacts(string $contacts): ?string
 {
     if (empty($contacts)) {
         return 'Укажите контакты для связи';
@@ -127,6 +126,84 @@ function validate_reg_contacts(string $contacts): ?string
         return 'Введите не более 255 символов';
     }
 
+    return null;
+}
+
+/**
+ * Функция проверки формы авторизации
+ * @param mysqli $connection идентификатор соединения
+ * @param array $form_data данные из формы
+ * @return array возващает массив с кодами ошибок
+ */
+function validate_login_form(mysqli $connection, array $form_data) : array
+{
+    $errors = [];
+    $required = ['email', 'password'];
+
+    $errors['email'] = validate_login_email($connection, $form_data['email']);
+    $errors['password'] = validate_login_password($connection, $form_data['email'], $form_data['password']);
+
+    foreach ($required as $val) {
+        if ($errors[$val]) {
+            return $errors;
+        }
+        unset($errors[$val]);
+    }
+
+    return $errors;
+}
+
+/**
+ * Проверяет поле email, а так же на уникальность введенного email
+ * @param mysqli $connection идентификатор соединения
+ * @param string $email данные из поля email
+ * @return string|null возвращает код ошибки, если он есть
+ */
+function validate_login_email(mysqli $connection, string $email): ?string
+{
+    if (empty($email)) {
+        return 'Введите ваш email';
+    }
+
+    if (strlen($email) > 255) {
+        return 'Введите не более 255 символов';
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return 'Введите существующий email';
+    }
+
+    $user = get_user_by_email($connection, $email);
+    if (!$user) {
+        return 'Пользователь не найден';
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки пароля
+ * @param mysqli $connection идентификатор соединения
+ * @param string $email указанный e-mail
+ * @param string $password указанный пароль
+ * @return string|null возващает массив с кодами ошибок, если они есть
+ */
+function validate_login_password(mysqli $connection, string $email, string $password): ?string
+{
+    if (empty($password)) {
+        return 'Введите пароль';
+    }
+    if (strlen($password) > 255) {
+        return 'Введите не более 255 символов';
+    }
+
+    $user = get_user_by_email($connection, $email);
+    if ($user) {
+        if (!password_verify($password, $user['pass'])) {
+            return 'Вы ввели неверный пароль';
+        }
+        $_SESSION['user'] = $user;
+    }
     return null;
 }
 
@@ -287,5 +364,3 @@ function validate_lot_file(array $file): ?string
     }
     return $err[0];
 }
-
-

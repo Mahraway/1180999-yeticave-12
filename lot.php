@@ -3,8 +3,6 @@
  * Описание переменных
  * @var mysqli $connection идентификатор соединения БД
  * @var string $title заголовок страницы
- * @var int $is_auth флаг авторизации
- * @var string $user_name имя пользователя
  */
 
 require_once('bootstrap.php');
@@ -21,15 +19,16 @@ $lot = get_lot($connection,$id);
 if (!$lot) {
     header('Location: /404.php');
 }
+
+$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
 $main_page = include_template('lot.php',['lot' => $lot, 'categories' => $categories]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
 $layout_content = include_template('layout.php', [
+        'top_menu' => $main_menu,
         'content' => $main_page,
         'categories' => $categories,
         'footer' => $main_footer,
-        'title' => $title,
-        'user_name' => $user_name,
-        'is_auth' => $is_auth,
+        'title' => $title
     ]
 );
 

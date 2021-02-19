@@ -144,3 +144,16 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
     }
 }
 
+/**
+ * Тестово-отладочная функция
+ * Выводит на экран содержимое одномерного массива
+ * @param array $arr
+ */
+function print_arr(array $arr) : void
+{
+    if (!empty($arr)) {
+        foreach ($arr as $k => $v) {
+            print $k . ' => ' . $v . '<br>';
+        }
+    }
+}
