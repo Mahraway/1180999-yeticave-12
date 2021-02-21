@@ -1,4 +1,7 @@
 <?php
+const UPLOAD_DIR = __DIR__ . '/uploads';
+
+session_start();
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -6,8 +9,7 @@ error_reporting(E_ALL);
 date_default_timezone_set("Europe/Moscow");
 
 // Основные настройки сайта
-$is_auth = rand(0, 1);
-$user_name = 'Рашид';
+
 $title = 'YetiCave';
 
 require_once (__DIR__ . '/functions/db.php');

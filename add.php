@@ -8,6 +8,11 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
+if (!isset($_SESSION['user'])) {
+    header('Location: /403.php');
+    exit();
+}
+
 $categories = get_categories($connection);
 $lots = get_active_lots($connection);
 
@@ -20,8 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         $form_data['image_url'] = upload_file($_FILES);
+        $form_data['user_id'] = $_SESSION['user']['id'];
         $id = add_lot($connection, $form_data);
         header("Location: /lot.php?id=$id");
+        exit();
     }
 }
 
@@ -32,9 +39,7 @@ $layout_content = include_template('layout.php', [
     'top_menu' => $main_menu,
     'content' => $main_page,
     'footer' => $main_footer,
-    'title' => $title,
-    'user_name' => $user_name,
-    'is_auth' => $is_auth,
+    'title' => $title
 ]);
 
 print ($layout_content);

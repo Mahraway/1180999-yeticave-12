@@ -102,7 +102,7 @@ function add_lot(mysqli $connection, array $lot): int
             VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $data = [
-        1, // TODO: user_id
+        $lot['user_id'],
         $lot['category_id'],
         date('Y:m:d h:i:s'),
         $lot['name'],
