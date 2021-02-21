@@ -27,15 +27,15 @@ function is_date_valid(string $date) : bool {
  * @param array $form_data данные из формы регистрации
  * @return array возвращает массив с кодами ошибок
  */
-function validate_account_form(mysqli $connection, array $form_data): array
+function validate_registration_form(mysqli $connection, array $form_data): array
 {
     $errors = [];
     $required = ['email', 'password', 'name', 'contacts'];
 
-    $errors['email'] = validate_account_email($connection, $form_data['email']);
-    $errors['password'] = validate_account_password($form_data['password']);
-    $errors['name'] = validate_account_name($form_data['name']);
-    $errors['contacts'] = validate_account_contacts($form_data['contacts']);
+    $errors['email'] = validate_registration_email($connection, $form_data['email']);
+    $errors['password'] = validate_registration_password($form_data['password']);
+    $errors['name'] = validate_registration_name($form_data['name']);
+    $errors['contacts'] = validate_registration_contacts($form_data['contacts']);
 
     foreach ($required as $val) {
         if ($errors[$val]) {
@@ -53,7 +53,7 @@ function validate_account_form(mysqli $connection, array $form_data): array
  * @param string $email данные из поля email
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_account_email(mysqli $connection, string $email): ?string
+function validate_registration_email(mysqli $connection, string $email): ?string
 {
     if (empty($email)) {
         return 'Введите ваш email';
@@ -81,7 +81,7 @@ function validate_account_email(mysqli $connection, string $email): ?string
  * @param string $password данные из поля пароль
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_account_password(string $password): ?string
+function validate_registration_password(string $password): ?string
 {
     if (empty($password)) {
         return 'Введите пароль';
@@ -98,7 +98,7 @@ function validate_account_password(string $password): ?string
  * @param string $name данные из поля имя
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_account_name(string $name): ?string
+function validate_registration_name(string $name): ?string
 {
     if (empty($name)) {
         return 'Введите ваше имя';
@@ -116,7 +116,7 @@ function validate_account_name(string $name): ?string
  * @param string $contacts данные из поля контакты
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_account_contacts(string $contacts): ?string
+function validate_registration_contacts(string $contacts): ?string
 {
     if (empty($contacts)) {
         return 'Укажите контакты для связи';
@@ -202,7 +202,6 @@ function validate_login_password(mysqli $connection, string $email, string $pass
         if (!password_verify($password, $user['pass'])) {
             return 'Вы ввели неверный пароль';
         }
-        $_SESSION['user'] = $user;
     }
     return null;
 }

@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = validate_login_form($connection, $form_data);
 
     if (empty($errors)) {
+        $_SESSION['user'] = get_user_by_email($connection, $form_data['email']);
         header('Location: /index.php');
         exit();
     }

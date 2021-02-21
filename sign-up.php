@@ -19,7 +19,7 @@ $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $form_data = filter_form_fields($_POST);
-    $errors = validate_account_form($connection, $form_data);
+    $errors = validate_registration_form($connection, $form_data);
 
     if (empty($errors)) {
         $form_data['password'] = password_hash($form_data['password'], PASSWORD_DEFAULT);

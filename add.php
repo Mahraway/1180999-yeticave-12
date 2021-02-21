@@ -10,6 +10,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 if (!isset($_SESSION['user'])) {
     header('Location: /403.php');
+    exit();
 }
 
 $categories = get_categories($connection);
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $form_data['user_id'] = $_SESSION['user']['id'];
         $id = add_lot($connection, $form_data);
         header("Location: /lot.php?id=$id");
+        exit();
     }
 }
 
