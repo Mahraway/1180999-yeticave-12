@@ -16,11 +16,23 @@ function get_param_id(string $id): ?int
 
 /**
  * Функция возвращает введенное значение текстового поля формы
+ * Ограничение: запросы методом POST
  * @param string $name название поля в форме добавления лота
  * @return string возвращает введенное значение поля формы
  */
 function get_post_value(string $name) : string
 {
     return $_POST[$name] ?? '';
+}
+
+/**
+ * Функция возвращает введенное значение текстового поля формы
+ * Ограничение: запросы методом GET
+ * @param string $name название поля в форме добавления лота
+ * @return string возвращает введенное значение поля формы
+ */
+function get_field_value(string $name) : string
+{
+    return $_GET[$name] ?? '';
 }
 

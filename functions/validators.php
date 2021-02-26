@@ -363,3 +363,15 @@ function validate_lot_file(array $file): ?string
     }
     return $err[0];
 }
+
+
+function validate_search_form(string $search) : ?string
+{
+    if (!$search) {
+        return 'Пустой запрос';
+    }
+    if (strlen($search) > 255) {
+        return  'Длинный запрос';
+    }
+    return null;
+}

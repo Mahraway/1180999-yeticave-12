@@ -220,3 +220,39 @@ function get_user_by_email(mysqli $connection, string $email): ?array
 
     return mysqli_fetch_assoc($result);
 }
+
+/**
+ * @param mysqli $connection
+ * @param int $limit
+ * @param int $offset
+ * @param string $search
+ * @return array
+ */
+function get_lots_from_search(mysqli $connection,int $limit,int $offset, string $search) : array
+{
+    $sql = "SELECT *, MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE) AS score
+            FROM lots
+            WHERE MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE)
+            LIMIT $limit OFFSET $offset";
+
+    $result = mysqli_query($connection, $sql);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    $sql = "SELECT *, MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE) AS score
+            FROM lots
+            WHERE MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE)";
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    $all_lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    $_SERVER['page_count'] = count($all_lots);
+
+    return $lots;
+}
