@@ -364,14 +364,14 @@ function validate_lot_file(array $file): ?string
     return $err[0];
 }
 
-
-function validate_search_form(string $search) : ?string
+/**
+ * @param array $search_data
+ * @return string|null
+ */
+function validate_search_form(array $search_data) : ?string
 {
-    if (!$search) {
-        return 'Пустой запрос';
-    }
-    if (strlen($search) > 255) {
-        return  'Длинный запрос';
+    if (empty($search_data['search'])) {
+        return 'Ошибка';
     }
     return null;
 }

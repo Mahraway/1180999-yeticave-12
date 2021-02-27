@@ -223,36 +223,49 @@ function get_user_by_email(mysqli $connection, string $email): ?array
 
 /**
  * @param mysqli $connection
- * @param int $limit
- * @param int $offset
+ * @param int $lots_per_page
+ * @param int $current_page
  * @param string $search
  * @return array
  */
-function get_lots_from_search(mysqli $connection,int $limit,int $offset, string $search) : array
+function search_lots(mysqli $connection, string $search, int $lots_per_page, int $current_page) : array
 {
+    $offset = ($current_page - 1) * $lots_per_page;
+
     $sql = "SELECT *, MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE) AS score
             FROM lots
             WHERE MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE)
-            LIMIT $limit OFFSET $offset";
+            LIMIT $lots_per_page OFFSET $offset";
 
     $result = mysqli_query($connection, $sql);
 
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
 
-    $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+/**
+ * Возвращает количество найденных лотов
+ * @param mysqli $connection
+ * @param string $search
+ * @return int
+ */
+function get_count_total_founded_lots(mysqli $connection, string $search) : int
+{
 
-    $sql = "SELECT *, MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE) AS score
+    $sql = "SELECT COUNT(*)
             FROM lots
-            WHERE MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE)";
-    $result = mysqli_query($connection, $sql);
+            WHERE MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE)";
+
+    $data = [$search];
+
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
-    $all_lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $_SERVER['page_count'] = count($all_lots);
-
-    return $lots;
+    return mysqli_stmt_fetch($stmt);
 }

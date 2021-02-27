@@ -1,46 +1,48 @@
 <?php
 /**
- * @var array $connection
+ * @var mysqli $connection
+ * @var array $config
+ * @var array $lots
  * @var string $title
+ * @var string $search
+ * @var string $total_pages_count
+ * @var int $count_total_founded_lots
+ * @var int $current_page_number
  */
 
 require_once 'bootstrap.php';
 
-
 $categories = get_categories($connection);
-$lots = [];
-$message = '';
-
+$lots_per_page = $config['pagination']['lots_per_page']; // количество элементов на странице
+$message = 'Результаты поиска по запросу '; // сообщение по умолчанию
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    if (!$_GET['search']) {
-        header('Location: /404.php');
-        exit();
-    }
+        if (empty($_GET)) {
+            header('Location: /404.php');
+            exit();
+        }
 
-    $search_form = filter_form_fields($_GET);
+        $search = filter_search_form($_GET);
+        $current_page_number = get_current_page_number($_GET); // номер текущей страницы
+        $count_total_founded_lots = get_count_total_founded_lots($connection, $search); //количество найденных элементов
+        $total_pages_count = ceil($count_total_founded_lots / $lots_per_page); // общее количество страниц
+        $lots = search_lots($connection, $search, $lots_per_page, $current_page_number); // найденные элементы
 
-    !isset($_GET['page']) ? $_GET['page'] = 1 : null;
-
-    $page = $_GET['page'];
-    $limit = 9;
-    $offset = 9 * ($page - 1);
-
-    $lots = get_lots_from_search($connection, $limit, $offset, $search_form['search']);
-    if (empty($lots)) {
-        $message = 'Ничего не найдено по вашему запросу<hr />';
-    }
-
-    $page_count = ceil($_SERVER['page_count']/$limit);
+        if (!$search || $count_total_founded_lots === 0) {
+            $message = 'Ничего не найдено по вашему запросу'; // сообщение, если не найдено элементов, либо пустая строка
+        }
 }
 
 $main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
 $main_page = include_template('search.php', [
     'lots' => $lots,
     'categories' => $categories,
+    'search' => $search,
     'message' => $message,
-    'page_count' => $page_count
+    'total_pages_count' => $total_pages_count,
+    'count_total_founded_lots' => $count_total_founded_lots,
+    'current_page_number' => $current_page_number
 ]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
 $layout_content = include_template('layout.php', [

@@ -96,7 +96,15 @@ function get_post_select(string $category_id) : ?string
     return null;
 }
 
-
+/**
+ * Функция заключает текст в ковычки (текст => "текст")
+ * @param string $text исходный текст
+ * @return string текст, заключенный в ковычки
+ */
+function get_quote_for_string(string $text) : string
+{
+    return $text ? $text = '"' . $text . '"' : '';
+}
 
 /**
  * Возвращает корректную форму множественного числа

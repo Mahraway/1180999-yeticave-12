@@ -36,3 +36,16 @@ function get_field_value(string $name) : string
     return $_GET[$name] ?? '';
 }
 
+/**
+ * Возвращает номер текущей страницы
+ * @param array $data
+ * @return int если номера нет, возвращает номер страницы поумолчанию - 1
+ */
+function get_current_page_number(array $data) : int
+{
+    if (empty($data['page'])) {
+        return 1;
+    }
+    return (int) $data['page'];
+}
+

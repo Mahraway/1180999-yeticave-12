@@ -12,5 +12,8 @@ return [
         'password' => 'Vbs3Hts42sdh',
         'port' => '465',
         'encryption' => 'SSL'
+    ],
+    'pagination' => [
+        'lots_per_page' => 9
     ]
 ];

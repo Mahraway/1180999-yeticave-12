@@ -1,10 +1,20 @@
+<?php
+/**
+ * @var array $lots
+ * @var array $categories
+ * @var string $search
+ * @var string $message
+ * @var string $total_pages_count
+ * @var int $count_total_founded_lots
+ * @var int $current_page_number
+ */
+?>
+
 <section class="lots">
-    <h2><span>Результат поиска по запросу "<?= $_GET['search'] ?? ''?>"</span></h2>
-    <?= $message ?? '' ?>
+    <h2><span><?= $message ?> <?= get_quote_for_string($search) ?> </span></h2>
     <ul class="lots__list">
         <?php foreach ($lots as $lot) : ?>
         <li class="lots__item lot">
-            <?= 'Score: ' . round($lot['score'], 2) ?>
             <div class="lot__image">
                 <img src="/<?= $lot['image'] ?>" width="350" height="260" alt="<?= $lot['name'] ?>">
             </div>
@@ -33,10 +43,19 @@
 </section>
 
 <ul class="pagination-list">
-    <li class="pagination-item pagination-item-prev"><a href="">Назад</a></li>
-    <!--pagination-item-active-->
-    <?php for ($i = 1;$i <= $page_count; $i++) : ?>
-    <li class="pagination-item"><a href="?page=<?= $i ?>&search=<?= $_GET['search'] ?>"><?= $i ?></a></li>
+    <li class="pagination-item pagination-item-prev">
+        <?php if ($current_page_number != 1) : ?>
+        <a href="?page=<?= ($current_page_number - 1) ?>&search=<?= $search?>">Назад</a></li>
+        <?php endif; ?>
+
+    <?php for ($i = 1;$i <= $total_pages_count; $i++) : ?>
+    <li class="number pagination-item<?= $current_page_number == $i ? '-active' : '' ?>">
+        <a href="?page=<?= $i ?>&search=<?= $search?>"><?= $i ?></a>
+    </li>
     <?php endfor; ?>
-    <li class="pagination-item pagination-item-next"><a href="#">Вперед</a></li>
+
+    <li class="pagination-item pagination-item-next">
+        <?php if ($current_page_number != $total_pages_count) : ?>
+        <a href="?page=<?= ($current_page_number + 1) ?>&search=<?= $search?>">Вперед</a></li>
+        <?php endif; ?>
 </ul>
