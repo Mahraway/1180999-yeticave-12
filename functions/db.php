@@ -211,8 +211,13 @@ function db_get_prepare_stmt(mysqli $link,string $sql,array $data = []) : mysqli
  */
 function get_user_by_email(mysqli $connection, string $email): ?array
 {
-    $sql = "SELECT * FROM `users` WHERE email = '$email'";
-    $result = mysqli_query($connection, $sql);
+    $sql = "SELECT * FROM `users` WHERE email = ?";
+
+    $data = [$email];
+
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
@@ -222,6 +227,7 @@ function get_user_by_email(mysqli $connection, string $email): ?array
 }
 
 /**
+ * Формирует список лотов для текущей страницы
  * @param mysqli $connection
  * @param int $lots_per_page
  * @param int $current_page
@@ -232,12 +238,15 @@ function search_lots(mysqli $connection, string $search, int $lots_per_page, int
 {
     $offset = ($current_page - 1) * $lots_per_page;
 
-    $sql = "SELECT *, MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE) AS score
+    $sql = "SELECT *, MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE) AS score
             FROM lots
-            WHERE MATCH(name,description) AGAINST('$search' IN NATURAL LANGUAGE MODE)
-            LIMIT $lots_per_page OFFSET $offset";
+            WHERE MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE)
+            LIMIT ? OFFSET ?";
 
-    $result = mysqli_query($connection, $sql);
+    $data = [$search, $search, $lots_per_page, $offset];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
@@ -249,9 +258,9 @@ function search_lots(mysqli $connection, string $search, int $lots_per_page, int
  * Возвращает количество найденных лотов
  * @param mysqli $connection
  * @param string $search
- * @return int
+ * @return array
  */
-function get_count_total_founded_lots(mysqli $connection, string $search) : int
+function get_count_total_founded_lots(mysqli $connection, string $search) : array
 {
 
     $sql = "SELECT COUNT(*)
@@ -261,11 +270,11 @@ function get_count_total_founded_lots(mysqli $connection, string $search) : int
     $data = [$search];
 
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
-    $result = mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
-
-    return mysqli_stmt_fetch($stmt);
+    return mysqli_fetch_assoc($result);
 }

@@ -7,6 +7,7 @@
  * @var string $total_pages_count
  * @var int $count_total_founded_lots
  * @var int $current_page_number
+ * @var int $lots_per_page
  */
 ?>
 
@@ -42,11 +43,12 @@
     </ul>
 </section>
 
+<?php if ($count_total_founded_lots['COUNT(*)'] > $lots_per_page) : ?>
 <ul class="pagination-list">
-    <li class="pagination-item pagination-item-prev">
-        <?php if ($current_page_number != 1) : ?>
-        <a href="?page=<?= ($current_page_number - 1) ?>&search=<?= $search?>">Назад</a></li>
-        <?php endif; ?>
+    <li class="pagination-item pagination-item-prev ">
+    <a class="<?= ($current_page_number == 1) ? 'page__item--hidden' : '' ?>"
+       href="?page=<?= ($current_page_number - 1) ?>&search=<?= $search?>">Назад
+    </a>
 
     <?php for ($i = 1;$i <= $total_pages_count; $i++) : ?>
     <li class="number pagination-item<?= $current_page_number == $i ? '-active' : '' ?>">
@@ -54,8 +56,10 @@
     </li>
     <?php endfor; ?>
 
-    <li class="pagination-item pagination-item-next">
-        <?php if ($current_page_number != $total_pages_count) : ?>
-        <a href="?page=<?= ($current_page_number + 1) ?>&search=<?= $search?>">Вперед</a></li>
-        <?php endif; ?>
+    <li class="pagination-item pagination-item-next ">
+        <a class="<?= ($current_page_number == $total_pages_count) ? 'page__item--hidden' : '' ?>"
+           href="?page=<?= ($current_page_number + 1) ?>&search=<?= $search?>">Вперед
+        </a>
+    </li>
 </ul>
+<?php endif; ?>
