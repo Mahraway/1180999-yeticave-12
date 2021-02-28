@@ -16,7 +16,7 @@ $categories = get_categories($connection);
 $lots_per_page = $config['pagination']['lots_per_page'];
 $message = 'Результаты поиска по запросу ';
 
-if (empty($_GET['search'])) {
+if (!isset($_GET['search'])) {
     header('Location: /404.php');
     exit();
 }
