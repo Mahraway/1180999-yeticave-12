@@ -13,25 +13,22 @@
 require_once 'bootstrap.php';
 
 $categories = get_categories($connection);
-$lots_per_page = $config['pagination']['lots_per_page']; // количество элементов на странице
-$message = 'Результаты поиска по запросу '; // сообщение по умолчанию
+$lots_per_page = $config['pagination']['lots_per_page'];
+$message = 'Результаты поиска по запросу ';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+if (empty($_GET['search'])) {
+    header('Location: /404.php');
+    exit();
+}
 
-        if (empty($_GET)) {
-            header('Location: /404.php');
-            exit();
-        }
+$search = filter_search_form($_GET);
+$current_page_number = get_current_page_number($_GET);
+$count_total_founded_lots = get_count_total_founded_lots($connection, $search);
+$total_pages_count = calculate_total_page_count($count_total_founded_lots, $lots_per_page);
+$lots = search_lots($connection, $search, $lots_per_page, $current_page_number);
 
-        $search = filter_search_form($_GET);
-        $current_page_number = get_current_page_number($_GET); // номер текущей страницы
-        $count_total_founded_lots = get_count_total_founded_lots($connection, $search); //количество найденных элементов
-        $total_pages_count = ceil($count_total_founded_lots['COUNT(*)'] / $lots_per_page); // общее количество страниц
-        $lots = search_lots($connection, $search, $lots_per_page, $current_page_number); // найденные элементы
-
-        if (!$search || $count_total_founded_lots === 0) {
-            $message = 'Ничего не найдено по вашему запросу'; // сообщение, если не найдено элементов, либо пустая строка
-        }
+if (!$search || $count_total_founded_lots === 0) {
+    $message = 'Ничего не найдено по вашему запросу';
 }
 
 $main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);

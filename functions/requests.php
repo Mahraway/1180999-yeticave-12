@@ -49,3 +49,13 @@ function get_current_page_number(array $data) : int
     return (int) $data['page'];
 }
 
+/**
+ * @param int $count_total_founded_lots
+ * @param int $lots_per_page
+ * @return float
+ */
+function calculate_total_page_count(int $count_total_founded_lots, int $lots_per_page) : float
+{
+    return ceil($count_total_founded_lots / $lots_per_page);
+}
+

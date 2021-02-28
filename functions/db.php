@@ -258,9 +258,9 @@ function search_lots(mysqli $connection, string $search, int $lots_per_page, int
  * Возвращает количество найденных лотов
  * @param mysqli $connection
  * @param string $search
- * @return array
+ * @return int
  */
-function get_count_total_founded_lots(mysqli $connection, string $search) : array
+function get_count_total_founded_lots(mysqli $connection, string $search) : int
 {
 
     $sql = "SELECT COUNT(*)
@@ -276,5 +276,7 @@ function get_count_total_founded_lots(mysqli $connection, string $search) : arra
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
-    return mysqli_fetch_assoc($result);
+    $count = mysqli_fetch_assoc($result);
+
+    return (int) $count['COUNT(*)'];
 }

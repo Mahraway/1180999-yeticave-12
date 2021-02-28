@@ -43,7 +43,7 @@
     </ul>
 </section>
 
-<?php if ($count_total_founded_lots['COUNT(*)'] > $lots_per_page) : ?>
+<?php if ($count_total_founded_lots > $lots_per_page) : ?>
 <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev ">
     <a class="<?= ($current_page_number == 1) ? 'page__item--hidden' : '' ?>"
