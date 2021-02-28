@@ -96,7 +96,15 @@ function get_post_select(string $category_id) : ?string
     return null;
 }
 
-
+/**
+ * Функция заключает текст в ковычки (текст => "текст")
+ * @param string $text исходный текст
+ * @return string текст, заключенный в ковычки
+ */
+function get_quote_for_string(string $text) : string
+{
+    return $text ? $text = '"' . $text . '"' : '';
+}
 
 /**
  * Возвращает корректную форму множественного числа
@@ -141,19 +149,5 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
 
         default:
             return $many;
-    }
-}
-
-/**
- * Тестово-отладочная функция
- * Выводит на экран содержимое одномерного массива
- * @param array $arr
- */
-function print_arr(array $arr) : void
-{
-    if (!empty($arr)) {
-        foreach ($arr as $k => $v) {
-            print $k . ' => ' . $v . '<br>';
-        }
     }
 }

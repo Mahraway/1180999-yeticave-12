@@ -211,12 +211,72 @@ function db_get_prepare_stmt(mysqli $link,string $sql,array $data = []) : mysqli
  */
 function get_user_by_email(mysqli $connection, string $email): ?array
 {
-    $sql = "SELECT * FROM `users` WHERE email = '$email'";
-    $result = mysqli_query($connection, $sql);
+    $sql = "SELECT * FROM `users` WHERE email = ?";
+
+    $data = [$email];
+
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
 
     return mysqli_fetch_assoc($result);
+}
+
+/**
+ * Формирует список лотов для текущей страницы
+ * @param mysqli $connection
+ * @param int $lots_per_page
+ * @param int $current_page
+ * @param string $search
+ * @return array
+ */
+function search_lots(mysqli $connection, string $search, int $lots_per_page, int $current_page) : array
+{
+    $offset = ($current_page - 1) * $lots_per_page;
+
+    $sql = "SELECT *, MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE) AS score
+            FROM lots
+            WHERE MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE)
+            LIMIT ? OFFSET ?";
+
+    $data = [$search, $search, $lots_per_page, $offset];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Возвращает количество найденных лотов
+ * @param mysqli $connection
+ * @param string $search
+ * @return int
+ */
+function get_count_total_founded_lots(mysqli $connection, string $search) : int
+{
+
+    $sql = "SELECT COUNT(*)
+            FROM lots
+            WHERE MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE)";
+
+    $data = [$search];
+
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    $count = mysqli_fetch_assoc($result);
+
+    return (int) $count['COUNT(*)'];
 }

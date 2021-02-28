@@ -26,6 +26,16 @@ function filter_form_fields(array $form_data): array
         return htmlspecialchars($var, ENT_QUOTES);
     }, $form_data);
 
-
     return $form_data;
+}
+
+/**
+ * Функция фильтрации поля поиска
+ * @param array $search_data
+ * @return string
+ */
+function filter_search_form(array $search_data) : string
+{
+    $search_data = filter_form_fields($search_data);
+    return trim($search_data['search']);
 }

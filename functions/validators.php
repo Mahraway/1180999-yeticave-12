@@ -363,3 +363,15 @@ function validate_lot_file(array $file): ?string
     }
     return $err[0];
 }
+
+/**
+ * @param array $search_data
+ * @return string|null
+ */
+function validate_search_form(array $search_data) : ?string
+{
+    if (empty($search_data['search'])) {
+        return 'Ошибка';
+    }
+    return null;
+}

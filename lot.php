@@ -9,8 +9,8 @@ require_once('bootstrap.php');
 
 $id = get_param_id($_GET['id']);
 
-if (!$id) {
-    header('Location: /404.php');
+if (empty($id)) {
+    header('Location: 404.php');
     exit();
 }
 
@@ -18,7 +18,7 @@ $categories = get_categories($connection);
 $lot = get_lot($connection,$id);
 
 if (!$lot) {
-    header('Location: /404.php');
+    header('Location: 404.php');
     exit();
 }
 
