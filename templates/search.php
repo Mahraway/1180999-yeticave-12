@@ -46,18 +46,19 @@
 <?php if ($count_total_founded_lots > $lots_per_page) : ?>
 <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev ">
-    <a class="<?= ($current_page_number == 1) ? 'page__item--hidden' : '' ?>"
+    <a class="<?= ($current_page_number === 1) ? 'page__item--hidden' : '' ?>"
        href="?page=<?= ($current_page_number - 1) ?>&search=<?= $search?>">Назад
     </a>
+    </li>
 
     <?php for ($i = 1;$i <= $total_pages_count; $i++) : ?>
-    <li class="number pagination-item<?= $current_page_number == $i ? '-active' : '' ?>">
+    <li class="number pagination-item <?= $current_page_number === $i ? 'pagination-item-active' : '' ?>">
         <a href="?page=<?= $i ?>&search=<?= $search?>"><?= $i ?></a>
     </li>
     <?php endfor; ?>
 
     <li class="pagination-item pagination-item-next ">
-        <a class="<?= ($current_page_number == $total_pages_count) ? 'page__item--hidden' : '' ?>"
+        <a class="<?= ($current_page_number === $total_pages_count) ? 'page__item--hidden' : '' ?>"
            href="?page=<?= ($current_page_number + 1) ?>&search=<?= $search?>">Вперед
         </a>
     </li>
