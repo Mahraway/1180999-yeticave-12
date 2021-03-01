@@ -365,13 +365,37 @@ function validate_lot_file(array $file): ?string
 }
 
 /**
- * @param array $search_data
+ * @param array $form_data
+ * @param array $lot
  * @return string|null
  */
-function validate_search_form(array $search_data) : ?string
+function validate_add_bet(array $form_data, array $lot) : ?string
 {
-    if (empty($search_data['search'])) {
-        return 'Ошибка';
+    $errors = validate_bet_field($form_data['cost'], $lot);
+
+
+    return $errors ?? null;
+}
+
+/**
+ * @param string $bet
+ * @param array $lot
+ * @return string|null
+ */
+function validate_bet_field(string $bet, array $lot) : ?string
+{
+    if (!$bet) {
+        return 'Введите вашу ставку';
+    }
+
+    if (!is_numeric($bet)) {
+        return 'Ставка должна быть числом';
+    }
+
+    //    значение должно быть больше или равно, чем текущая цена лота + шаг ставки.
+    if ($bet < $lot['price'] + $lot['step']) {
+        return 'Поднимите ставку';
     }
     return null;
 }
+

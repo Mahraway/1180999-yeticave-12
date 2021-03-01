@@ -1,5 +1,5 @@
 <?php
-const UPLOAD_DIR = __DIR__ . '/uploads';
+const UPLOAD_DIR = __DIR__ . '/uploads/';
 
 session_start();
 ini_set('display_errors', '1');

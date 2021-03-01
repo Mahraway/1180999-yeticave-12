@@ -1,11 +1,12 @@
 <?php
-
+/**
+ * @var mysqli $connection
+ */
 require_once 'bootstrap.php';
 
-$lots_per_page = $config['pagination']['lots_per_page'];
+$user_id = 3;
+$bets = get_my_bets($connection, $user_id);
+$lot = get_lot($connection, $bets[0]['lot_id']);
+print_r($lot);
 
-$search = '2015';
-$email = 'rashid@mail.ru';
-
-print_r(search_lots($connection,$search, $lots_per_page,1 ));
 
