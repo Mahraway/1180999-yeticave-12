@@ -359,3 +359,21 @@ function get_bets_by_lot(mysqli $connection, int $lot) : array
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+/**
+ * @param mysqli $connection
+ * @param int $lot
+ * @return array|null
+ */
+function get_last_bet_of_lot(mysqli $connection, int $lot) : ?array
+{
+    $sql = "SELECT * FROM bets WHERE lot_id=? ORDER BY (dt_add) DESC LIMIT 1;";
+    $data = [$lot];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    return mysqli_fetch_assoc($result) ?? null;
+}

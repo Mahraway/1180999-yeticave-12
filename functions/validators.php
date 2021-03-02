@@ -365,24 +365,25 @@ function validate_lot_file(array $file): ?string
 }
 
 /**
+ * @param mysqli $connection
  * @param array $form_data
  * @param array $lot
  * @return string|null
  */
-function validate_add_bet(array $form_data, array $lot) : ?string
+function validate_add_bet(mysqli $connection, array $form_data, array $lot) : ?string
 {
-    $errors = validate_bet_field($form_data['cost'], $lot);
-
+    $errors = validate_bet_field($connection, $form_data['cost'], $lot);
 
     return $errors ?? null;
 }
 
 /**
+ * @param mysqli $connection
  * @param string $bet
  * @param array $lot
  * @return string|null
  */
-function validate_bet_field(string $bet, array $lot) : ?string
+function validate_bet_field(mysqli $connection, string $bet, array $lot) : ?string
 {
     if (!$bet) {
         return 'Введите вашу ставку';
@@ -392,10 +393,25 @@ function validate_bet_field(string $bet, array $lot) : ?string
         return 'Ставка должна быть числом';
     }
 
-    //    значение должно быть больше или равно, чем текущая цена лота + шаг ставки.
-    if ($bet < $lot['price'] + $lot['step']) {
-        return 'Поднимите ставку';
+    if ( strtotime($lot['dt_end']) - time() < 0) {
+        return 'Срок размещения лота истек';
     }
+//    Текущая цена лота = сумме последней ставки (если если ставка уже есть).
+//    Соответственно надо проверять факт наличия ставок по лоту и получать актуальную цену
+//    соотвественно размер следующей ставки должен быть: цена последней ставки + шаг ставки
+
+    $last_bet = get_last_bet_of_lot($connection, $lot['id']);
+    if (!empty($last_bet)) {
+
+        if ($bet < $last_bet['price'] + $lot['step']) {
+            return 'Повысьте ставку';
+        }
+
+        if ($last_bet['user_id'] === $_SESSION['user']['id']) {
+            return 'Последняя ставка сделана текущим пользователем';
+        }
+    }
+
     return null;
 }
 

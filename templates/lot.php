@@ -16,7 +16,8 @@
           <p class="lot-item__description"><?= $lot['description'] ?></p>
         </div>
         <div class="lot-item__right">
-            <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] != $lot['user_id']) : ?>
+            <?php if (isset($_SESSION['user'])
+                && $_SESSION['user']['id'] != $lot['user_id']) : ?>
           <div class="lot-item__state">
             <?php
             $timer = get_time_before($lot['dt_end']);
@@ -29,8 +30,26 @@
             </div>
             <div class="lot-item__cost-state">
               <div class="lot-item__rate">
-                <span class="lot-item__amount">Текущая цена</span>
-                <span class="lot-item__cost"><?= format_price($lot['price']) ?></span>
+
+                  <?php
+                  $current_price = get_last_bet_of_lot($connection, $lot['id'])['price'];
+                  $bets_count = count(get_bets_by_lot($connection,$lot['id']));
+                  if (!$current_price): ?>
+                      <span class="lot__amount">Стартовая цена</span>
+                      <span class="lot__cost"><?= format_price($lot['price']); ?></span>
+                      <!-- Блок цена - если ставок нет, то отобр-ся стартовая цена, иначе цена со ставкой -->
+                  <?php else: ?>
+                      <span class="lot__amount">
+                                    <?= $bets_count . get_noun_plural_form(
+                                        $bets_count,
+                                        ' ставка',
+                                        ' ставки',
+                                        ' cтавок'
+                                    ) ?>
+                                </span>
+                      <span class="lot__cost"><?= format_price($current_price) ?></span>
+                  <?php endif; ?>
+
               </div>
               <div class="lot-item__min-cost">
                 Мин. ставка <span><?= format_price($lot['step']) ?></span>
@@ -53,7 +72,7 @@
                 <tr class="history__item">
                 <td class="history__name"><?= get_user_name_by_id($connection, $bet['user_id']) ?></td>
                 <td class="history__price"><?= format_price($bet['price']) ?></td>
-                <td class="history__time"><?= $bet['dt_add'] ?></td>
+                <td class="history__time"><?= date('y.m.d в H:i', strtotime($bet['dt_add'])) ?></td>
               </tr>
             <?php endforeach; ?>
             </table>

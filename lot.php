@@ -25,10 +25,9 @@ if (!$lot) {
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_data = filter_form_fields($_POST);
-    $error = validate_add_bet($form_data, $lot);
+    $error = validate_add_bet($connection, $form_data, $lot);
     if (!$error) {
         add_bet($connection, $_SESSION['user']['id'], $lot['id'], (int) $form_data['cost']);
-        update_lot_price($connection, $lot['id'], $form_data['cost']);
         header('Location: /lot.php?id='.$lot['id']);
         exit();
     }

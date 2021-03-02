@@ -13,7 +13,7 @@ $lots = get_active_lots($connection);
 $categories = get_categories($connection);
 
 $main_menu = include_template('/menu/promo_menu.php', ['categories' => $categories]);
-$main_page = include_template('main.php', ['promo_menu' => $main_menu, 'lots' => $lots]);
+$main_page = include_template('main.php', ['promo_menu' => $main_menu, 'lots' => $lots, 'connection' => $connection]);
 $main_footer = include_template('footer.php', ['categories' => $categories]);
 $layout_content = include_template('layout.php', [
     'content' => $main_page,
