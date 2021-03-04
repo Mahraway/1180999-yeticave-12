@@ -306,25 +306,6 @@ function add_bet(mysqli $connection, int $user_id, int $lot_id, int $price) : vo
 
 /**
  * @param mysqli $connection
- * @param int $lot_id
- * @param int $price
- */
-function update_lot_price(mysqli $connection, int $lot_id, int $price) : void
-{
-    $sql = "UPDATE lots SET price = ? WHERE lots.id = ?";
-    $data = [
-        $price,
-        $lot_id
-    ];
-    $stmt = db_get_prepare_stmt($connection, $sql, $data);
-    $result = mysqli_stmt_execute($stmt);
-    if (!$result) {
-        exit('Ошибка: ' . mysqli_error($connection));
-    }
-}
-
-/**
- * @param mysqli $connection
  * @param int $user
  * @return array
  */
@@ -375,5 +356,6 @@ function get_last_bet_of_lot(mysqli $connection, int $lot) : ?array
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
+
     return mysqli_fetch_assoc($result) ?? null;
 }

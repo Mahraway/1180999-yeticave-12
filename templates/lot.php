@@ -1,8 +1,10 @@
 <?php
 /**
- * @var array $lot массив с данными лота
- * @var array $categories массив с категориями
+ * @var array $lot
+ * @var array $bets
+ * @var array $categories
  * @var string $error
+ * @var mysqli $connection
  */
 ?>
     <section class="lot-item container">
@@ -32,22 +34,13 @@
               <div class="lot-item__rate">
 
                   <?php
-                  $current_price = get_last_bet_of_lot($connection, $lot['id'])['price'];
-                  $bets_count = count(get_bets_by_lot($connection,$lot['id']));
-                  if (!$current_price): ?>
-                      <span class="lot__amount">Стартовая цена</span>
-                      <span class="lot__cost"><?= format_price($lot['price']); ?></span>
-                      <!-- Блок цена - если ставок нет, то отобр-ся стартовая цена, иначе цена со ставкой -->
-                  <?php else: ?>
-                      <span class="lot__amount">
-                                    <?= $bets_count . get_noun_plural_form(
-                                        $bets_count,
-                                        ' ставка',
-                                        ' ставки',
-                                        ' cтавок'
-                                    ) ?>
-                                </span>
-                      <span class="lot__cost"><?= format_price($current_price) ?></span>
+                  $last_bet = get_last_bet_of_lot($connection, $lot['id']);
+                  if (!$last_bet) : ?>
+                  <span class="lot__amount">Стартовая цена</span>
+                  <span class="lot__cost"><?= format_price($lot['price']); ?></span>
+                  <?php else : ?>
+                      <span class="lot__amount">Текущая цена</span>
+                      <span class="lot__cost"><?= format_price($lot['price'] = $last_bet['price']) ?></span>
                   <?php endif; ?>
 
               </div>
@@ -58,7 +51,7 @@
             <form class="lot-item__form" action="/lot.php?id=<?= $lot['id'] ?>" method="post" autocomplete="off">
               <p class="lot-item__form-item form__item form__item<?= $error ? '--invalid': null ?>">
                 <label for="cost">Ваша ставка</label>
-                <input id="cost" type="text" name="cost" placeholder="<?= $current_price + $lot['step'] ?>" value="<?= get_post_value('cost') ?>">
+                <input id="cost" type="text" name="cost" placeholder="<?= $lot['price'] + $lot['step'] ?>" value="<?= get_post_value('cost') ?>">
                 <span class="form__error"><?= $error ?></span>
               </p>
               <button type="submit" class="button">Сделать ставку</button>

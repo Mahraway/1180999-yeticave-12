@@ -396,9 +396,6 @@ function validate_bet_field(mysqli $connection, string $bet, array $lot) : ?stri
     if ( strtotime($lot['dt_end']) - time() < 0) {
         return 'Срок размещения лота истек';
     }
-//    Текущая цена лота = сумме последней ставки (если если ставка уже есть).
-//    Соответственно надо проверять факт наличия ставок по лоту и получать актуальную цену
-//    соотвественно размер следующей ставки должен быть: цена последней ставки + шаг ставки
 
     $last_bet = get_last_bet_of_lot($connection, $lot['id']);
     if (!empty($last_bet)) {
@@ -410,8 +407,11 @@ function validate_bet_field(mysqli $connection, string $bet, array $lot) : ?stri
         if ($last_bet['user_id'] === $_SESSION['user']['id']) {
             return 'Последняя ставка сделана текущим пользователем';
         }
+    } else {
+        if ($bet < $lot['price'] + $lot['step']) {
+            return 'Повысьте ставку';
+        }
     }
 
     return null;
 }
-

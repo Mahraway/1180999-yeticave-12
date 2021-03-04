@@ -26,23 +26,26 @@
                     <h3 class="lot__title"><a class="text-link" href="/lot.php?id=<?= $lot['id'] ?>"><?= htmlspecialchars($lot['name'])?></a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
+
                             <?php
-                            $current_price = get_last_bet_of_lot($connection, $lot['id'])['price'];
-                            $bets_count = count(get_bets_by_lot($connection,$lot['id']));
-                            if (!$current_price): ?>
+                            $last_bet = get_last_bet_of_lot($connection, $lot['id']);
+                            if (!$last_bet) : ?>
                                 <span class="lot__amount">Стартовая цена</span>
                                 <span class="lot__cost"><?= format_price($lot['price']); ?></span>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <span class="lot__amount">
-                                    <?= $bets_count . get_noun_plural_form(
+                                    <?php
+                                    $bets_count = count(get_bets_by_lot($connection, $lot['id']));
+                                    print $bets_count .  get_noun_plural_form(
                                         $bets_count,
                                         ' ставка',
                                         ' ставки',
-                                        ' cтавок'
-                                    ) ?>
+                                        ' cтавок');
+                                    ?>
                                 </span>
-                                <span class="lot__cost"><?= format_price($current_price) ?></span>
+                                <span class="lot__cost"><?= format_price($last_bet['price']) ?></span>
                             <?php endif; ?>
+
                         </div>
                         <?php
                         $timer = get_time_before($lot['dt_end']);
