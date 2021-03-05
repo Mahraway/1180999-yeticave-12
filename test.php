@@ -2,10 +2,4 @@
 
 require_once 'bootstrap.php';
 
-$lots_per_page = $config['pagination']['lots_per_page'];
-
-$search = '2015';
-$email = 'rashid@mail.ru';
-
-print_r(search_lots($connection,$search, $lots_per_page,1 ));
-
+print get_last_bet_of_lot($connection, 1)['user_id'];

@@ -39,3 +39,4 @@ function filter_search_form(array $search_data) : string
     $search_data = filter_form_fields($search_data);
     return trim($search_data['search']);
 }
+

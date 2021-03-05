@@ -280,3 +280,82 @@ function get_count_total_founded_lots(mysqli $connection, string $search) : int
 
     return (int) $count['COUNT(*)'];
 }
+
+/**
+ * @param mysqli $connection
+ * @param int $user_id
+ * @param int $lot_id
+ * @param int $price
+ */
+function add_bet(mysqli $connection, int $user_id, int $lot_id, int $price) : void
+{
+    $sql = "INSERT INTO bets (user_id, lot_id, dt_add, price)
+            VALUES (?, ?, ?, ?)";
+    $data = [
+        $user_id,
+        $lot_id,
+        date('Y:m:d H:i:s'),
+        $price
+    ];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $user
+ * @return array
+ */
+function get_my_bets(mysqli $connection, int $user) : array
+{
+    $sql = "SELECT * FROM bets WHERE user_id=? ORDER BY dt_add DESC";
+    $data = [$user];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $lot
+ * @return array
+ */
+function get_bets_by_lot(mysqli $connection, int $lot) : array
+{
+    $sql = "SELECT * FROM bets WHERE lot_id=? ORDER BY dt_add DESC";
+    $data = [$lot];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $lot
+ * @return array|null
+ */
+function get_last_bet_of_lot(mysqli $connection, int $lot) : ?array
+{
+    $sql = "SELECT * FROM bets WHERE lot_id=? ORDER BY (dt_add) DESC LIMIT 1;";
+    $data = [$lot];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    return mysqli_fetch_assoc($result) ?? null;
+}

@@ -82,6 +82,23 @@ function get_category_name(array $lot, array $categories): ?string
 }
 
 /**
+ * @param mysqli $connection
+ * @param int $user_id
+ * @return string
+ */
+function get_user_name_by_id (mysqli $connection, int $user_id) : string
+{
+    $sql = "SELECT name FROM users WHERE id='$user_id'";
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        exit('Error: ' . mysqli_error($connection));
+    }
+    $user = mysqli_fetch_assoc($result);
+
+    return $user['name'];
+}
+
+/**
  * Функция возвращает SELECT для списка поля формы добавленя лота
  * @param string $category_id id категории лота
  * @return string|null в случае успешной проверки, возвращает SELECT
