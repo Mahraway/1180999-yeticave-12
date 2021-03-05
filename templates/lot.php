@@ -45,7 +45,7 @@
 
               </div>
               <div class="lot-item__min-cost">
-                Мин. ставка <span><?= format_price($lot['step']) ?></span>
+                Мин. ставка: <span><?= format_price($lot['price']+$lot['step']) ?></span>
               </div>
             </div>
             <form class="lot-item__form" action="/lot.php?id=<?= $lot['id'] ?>" method="post" autocomplete="off">
