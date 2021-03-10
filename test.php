@@ -1,5 +1,5 @@
 <?php
 
-require_once 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
-print get_last_bet_of_lot($connection, 1)['user_id'];
+var_dump($config['mailer']);

@@ -7,7 +7,8 @@
  * @var string $footer шаблон футера
  */
 
-require_once('bootstrap.php');
+require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/getwinner.php';
 
 $lots = get_active_lots($connection);
 $categories = get_categories($connection);

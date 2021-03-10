@@ -24,6 +24,7 @@ CREATE TABLE users (
 CREATE TABLE lots (
 	id INT AUTO_INCREMENT,
 	user_id INT NOT NULL,
+	winner_id INT NULL,
 	category_id INT NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(1000) NOT NULL,
@@ -37,7 +38,8 @@ CREATE TABLE lots (
 	INDEX lots_category_idx (category_id),
 	INDEX lots_user_idx (user_id),
 	FOREIGN KEY (category_id) REFERENCES categories (id),
-	FOREIGN KEY (user_id) REFERENCES users (id)
+	FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN  KEY (winner_id) REFERENCES users (id)
 );
 
 CREATE TABLE bets (
@@ -50,7 +52,7 @@ CREATE TABLE bets (
 	INDEX bets_user_idx (user_id),
 	INDEX bets_lot_idx (lot_id),
 	FOREIGN KEY (user_id) REFERENCES users (id),
-	FOREIGN KEY (lot_id) REFERENCES lots (id)
+	FOREIGN KEY (lot_id) REFERENCES lots (id),
 );
 
 CREATE FULLTEXT INDEX lots_ft_search ON lots(name,description);

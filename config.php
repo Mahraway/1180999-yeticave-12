@@ -7,9 +7,9 @@ return [
         'database' => 'yeticave'
     ],
     'mailer' => [
-        'host' => 'smtp.yandex.ru',
-        'username' => 'sender@test.ru',
-        'password' => 'Vbs3Hts42sdh',
+        'host' => 'smtp.beget.ru',
+        'username' => 'yeticave@mahraway.ru',
+        'password' => 'Yeti123',
         'port' => '465',
         'encryption' => 'SSL'
     ],

@@ -359,3 +359,53 @@ function get_last_bet_of_lot(mysqli $connection, int $lot) : ?array
 
     return mysqli_fetch_assoc($result) ?? null;
 }
+
+/**
+ * @param mysqli $connection
+ * @return array
+ */
+function get_lots_without_winner(mysqli $connection): array
+{
+    $sql = "SELECT * FROM lots WHERE dt_end < NOW() AND winner_id IS NULL";
+
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $lot
+ * @param int $winner_user
+ */
+function add_winner_to_lot(mysqli $connection,int $lot,int $winner_user) : void
+{
+    $sql = "UPDATE lots SET winner_id = ? WHERE id = ?";
+    $data = [$winner_user, $lot];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $user_id
+ * @return array
+ */
+function get_user_by_id(mysqli $connection, int $user_id) : array
+{
+    $sql = "SELECT * FROM users WHERE id=?";
+    $data = [$user_id];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    return mysqli_fetch_assoc($result);
+}

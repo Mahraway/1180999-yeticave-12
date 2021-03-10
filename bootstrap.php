@@ -12,6 +12,7 @@ date_default_timezone_set("Europe/Moscow");
 
 $title = 'YetiCave';
 
+require_once (__DIR__ . '/vendor/autoload.php');
 require_once (__DIR__ . '/functions/db.php');
 require_once (__DIR__ . '/functions/views.php');
 require_once (__DIR__ . '/functions/validators.php');
@@ -19,6 +20,7 @@ require_once (__DIR__ . '/functions/filters.php');
 require_once (__DIR__ . '/functions/file.php');
 require_once (__DIR__ . '/functions/requests.php');
 require_once('config.php');
+
 
 $config = require 'config.php';
 

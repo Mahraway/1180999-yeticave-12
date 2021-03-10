@@ -58,3 +58,23 @@ function calculate_total_page_count(int $count_total_founded_lots, int $lots_per
 {
     return (int) ceil($count_total_founded_lots / $lots_per_page);
 }
+
+/**
+ * @param array $mailer
+ * @param string $user_email
+ * @param string $text
+ */
+function winner_notice(array $mailer, string $user_email, string $text) :void
+{
+    $transport = new Swift_SmtpTransport($mailer['host'], $mailer['port'], $mailer['encryption']);
+    $transport->setUsername($mailer['username']);
+    $transport->setPassword($mailer['password']);
+
+    $message = new Swift_Message('YetiCave');
+    $message->setTo($user_email);
+    $message->setBody($text, 'text/html');
+    $message->setFrom($mailer['username'], "YetiCave");
+
+    $mailer = new Swift_Mailer($transport);
+    $mailer->send($message);
+}

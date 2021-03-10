@@ -1,0 +1,12 @@
+{
+    "name": "asus/localhost",
+    "authors": [
+        {
+            "name": "Rashid",
+            "email": "mahraway@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}
