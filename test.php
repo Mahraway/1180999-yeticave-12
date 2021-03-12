@@ -2,4 +2,4 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-var_dump($config['mailer']);
+print add_winner_to_lot($connection, 2, 3);

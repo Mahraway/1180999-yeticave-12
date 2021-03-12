@@ -64,7 +64,7 @@ function calculate_total_page_count(int $count_total_founded_lots, int $lots_per
  * @param string $user_email
  * @param string $text
  */
-function winner_notice(array $mailer, string $user_email, string $text) :void
+function notify_winner(array $mailer, string $user_email, string $text) :void
 {
     $transport = new Swift_SmtpTransport($mailer['host'], $mailer['port'], $mailer['encryption']);
     $transport->setUsername($mailer['username']);
@@ -77,4 +77,19 @@ function winner_notice(array $mailer, string $user_email, string $text) :void
 
     $mailer = new Swift_Mailer($transport);
     $mailer->send($message);
+}
+
+/**
+ * @param mysqli $connection
+ * @param array $lot
+ * @return int|null
+ */
+function complete_lot(mysqli $connection, array $lot): ?int
+{
+    $bets = get_last_bet_of_lot($connection, $lot['id']);
+    if (!empty($bets)) {
+        add_winner_to_lot($connection, $lot['id'], $bets['user_id']);
+        return $bets['user_id'];
+    }
+    return null;
 }
