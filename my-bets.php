@@ -4,7 +4,7 @@
  * @var string $title
  */
 
-include_once 'bootstrap.php';
+include_once __DIR__ . '/bootstrap.php';
 
 $categories = get_categories($connection);
 $bets = get_my_bets($connection, $_SESSION['user']['id']);

@@ -23,7 +23,7 @@
         <tr class="rates__item rates__item<?= $item_class ?>">
             <td class="rates__info">
                 <div class="rates__img">
-                    <img src="<?= $lot['image'] ?>" width="54" height="40" alt="Сноуборд">
+                    <img src="<?= $lot['image'] ?>" width="54" height="40" alt="<?= $lot['name'] ?>>">
                 </div>
                 <div>
                     <h3 class="rates__title"><a href="lot.php?id=<?= $lot['id'] ?>"><?= $lot['name'] ?></a></h3>
@@ -33,7 +33,7 @@
                 </div>
             </td>
             <td class="rates__category">
-                <?= get_category_name($lot, $categories)?>
+                <?= $lot['category_name'] ?>
             </td>
             <td class="rates__timer">
                 <?php

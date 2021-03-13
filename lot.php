@@ -5,24 +5,24 @@
  * @var string $title заголовок страницы
  */
 
-require_once('bootstrap.php');
+require_once __DIR__ . '/bootstrap.php';
 
+if (!isset($_GET['id'])) {
+    header('Location: 404.php');
+    exit();
+}
 $id = get_param_id($_GET['id']);
+$categories = get_categories($connection);
+$lot = get_lot($connection,$id);
 
-if (empty($id)) {
+if (!$lot['id']) {
     header('Location: 404.php');
     exit();
 }
 
-$categories = get_categories($connection);
-$lot = get_lot($connection,$id);
 $bets = get_bets_by_lot($connection, $lot['id']);
 $error = '';
 
-if (!$lot) {
-    header('Location: 404.php');
-    exit();
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_data = filter_form_fields($_POST);
     $error = validate_add_bet($connection, $form_data, $lot);

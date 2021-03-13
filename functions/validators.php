@@ -313,7 +313,7 @@ function validate_lot_step(string $step): ?string
     }
 
     if (is_numeric($step) && $step > 0) {
-        $_POST['step'] = round($step, 0);
+        $_POST['step'] = round($step, 0, PHP_ROUND_HALF_UP);
     } else {
         return 'Введите целое число большее нуля';
     }

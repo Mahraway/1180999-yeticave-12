@@ -7,7 +7,7 @@
 header("HTTP/1.1 404 Not Found");
 header("Status: 404 Not Found");
 
-require_once('bootstrap.php');
+require_once __DIR__ . '/bootstrap.php';
 
 $categories = get_categories($connection);
 

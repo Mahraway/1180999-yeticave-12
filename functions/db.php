@@ -74,9 +74,12 @@ function get_categories(mysqli $connection): array
 function get_lot(mysqli $connection, int $id): ?array
 {
     $lot =
-        "SELECT *
-        FROM lots
-        WHERE id = $id";
+        "SELECT l.id, l.name, l.user_id, l.winner_id, l.step, l.description, l.price, MAX(b.price) AS current_price, image,
+                c.name AS category_name, l.dt_end
+        FROM lots l
+        JOIN categories c ON c.id = l.category_id
+        LEFT JOIN bets b ON b.lot_id = l.id
+        WHERE l.id = $id";
 
     $result = mysqli_query($connection, $lot);
 
@@ -84,9 +87,7 @@ function get_lot(mysqli $connection, int $id): ?array
         exit('Ошибка: ' . mysqli_error($connection));
     }
 
-    $lot = mysqli_fetch_assoc($result);
-
-    return $lot;
+    return mysqli_fetch_assoc($result);
 }
 
 /**
@@ -104,7 +105,7 @@ function add_lot(mysqli $connection, array $lot): int
     $data = [
         $lot['user_id'],
         $lot['category_id'],
-        date('Y:m:d h:i:s'),
+        date('Y:m:d H:i:s'),
         $lot['name'],
         $lot['description'],
         $lot['image_url'],
@@ -227,7 +228,7 @@ function get_user_by_email(mysqli $connection, string $email): ?array
 }
 
 /**
- * Формирует список лотов для текущей страницы
+ * Формирует список лотов для текущей страницы поиска
  * @param mysqli $connection
  * @param int $lots_per_page
  * @param int $current_page
@@ -238,10 +239,14 @@ function search_lots(mysqli $connection, string $search, int $lots_per_page, int
 {
     $offset = ($current_page - 1) * $lots_per_page;
 
-    $sql = "SELECT *, MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE) AS score
-            FROM lots
-            WHERE MATCH(name,description) AGAINST(? IN NATURAL LANGUAGE MODE)
-            LIMIT ? OFFSET ?";
+    $sql = "SELECT l.id, l.name, l.description, l.price, MAX(b.price) AS current_price, image,
+                c.name AS category_name, l.dt_end, MATCH(l.name, l.description) AGAINST(? IN NATURAL LANGUAGE MODE) AS score
+                FROM lots l
+                JOIN categories c ON l.category_id = c.id
+                LEFT JOIN bets b ON l.id = b.lot_id
+                WHERE MATCH(l.name, l.description) AGAINST(? IN NATURAL LANGUAGE MODE)
+                GROUP BY l.id
+                LIMIT ? OFFSET ?";
 
     $data = [$search, $search, $lots_per_page, $offset];
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
@@ -260,7 +265,7 @@ function search_lots(mysqli $connection, string $search, int $lots_per_page, int
  * @param string $search
  * @return int
  */
-function get_count_total_founded_lots(mysqli $connection, string $search) : int
+function get_count_total_founded_lots_from_search(mysqli $connection, string $search) : int
 {
 
     $sql = "SELECT COUNT(*)
@@ -278,6 +283,22 @@ function get_count_total_founded_lots(mysqli $connection, string $search) : int
     }
     $count = mysqli_fetch_assoc($result);
 
+    return (int) $count['COUNT(*)'];
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $category
+ * @return int
+ */
+function get_count_all_lots(mysqli $connection, int $category): int
+{
+    $sql = "SELECT COUNT(*) FROM lots WHERE category_id = $category";
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    $count = mysqli_fetch_assoc($result);
     return (int) $count['COUNT(*)'];
 }
 
@@ -409,3 +430,71 @@ function get_user_by_id(mysqli $connection, int $user_id) : array
 
     return mysqli_fetch_assoc($result);
 }
+
+/**
+ * @param mysqli $connection
+ * @param int $user_id
+ * @return string
+ */
+function get_user_name_by_id(mysqli $connection, int $user_id) : string
+{
+    $sql = "SELECT name FROM users WHERE id='$user_id'";
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        exit('Error: ' . mysqli_error($connection));
+    }
+    $user = mysqli_fetch_assoc($result);
+
+    return $user['name'];
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $id
+ * @return string
+ */
+function get_category_by_id(mysqli $connection, int $id): string
+{
+    $sql = "SELECT * FROM categories WHERE id=?";
+    $data = [$id];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+
+    return mysqli_fetch_assoc($result)['name'];
+}
+
+/**
+ * @param mysqli $connection
+ * @param int $category_id
+ * @param int $lots_per_page
+ * @param int $current_page
+ * @return array
+ */
+function get_lots_by_category(mysqli $connection,int $category_id, int $lots_per_page, int $current_page) : array
+{
+    $offset = ($current_page - 1) * $lots_per_page;
+
+    $sql = "SELECT l.id, l.name, l.user_id, l.winner_id, l.step, l.description, l.price, MAX(b.price) AS current_price, image,
+                c.name AS category_name, l.dt_end
+        FROM lots l
+        JOIN categories c ON c.id = l.category_id
+        LEFT JOIN bets b ON b.lot_id = l.id
+        WHERE c.id = ?
+        GROUP BY l.id
+        LIMIT ? OFFSET ?";
+
+    $data = [$category_id, $lots_per_page, $offset];
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        exit('Ошибка: ' . mysqli_error($connection));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+

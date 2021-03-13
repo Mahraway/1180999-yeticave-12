@@ -61,42 +61,6 @@ function get_time_before(string $date): array
     return [0, 0];
 }
 
-/**
- * Описание: функуия формирования названия категории лота
- * Алгоритм: ID категории лота сравнивает с массивом категорий
- * При выполнении условия, возвращает название категории
- * @param array $lot массив с данными лота
- * @param array $categories массив с категориями
- * @return string $name возвращает возвращает название категории лота
- */
-function get_category_name(array $lot, array $categories): ?string
-{
-    $result = $lot['category_id'];
-    foreach($categories as $category) {
-        switch ($result) {
-            case $category['id']:
-                return $category['name'];
-        }
-    }
-    return null;
-}
-
-/**
- * @param mysqli $connection
- * @param int $user_id
- * @return string
- */
-function get_user_name_by_id (mysqli $connection, int $user_id) : string
-{
-    $sql = "SELECT name FROM users WHERE id='$user_id'";
-    $result = mysqli_query($connection, $sql);
-    if (!$result) {
-        exit('Error: ' . mysqli_error($connection));
-    }
-    $user = mysqli_fetch_assoc($result);
-
-    return $user['name'];
-}
 
 /**
  * Функция возвращает SELECT для списка поля формы добавленя лота
@@ -120,7 +84,7 @@ function get_post_select(string $category_id) : ?string
  */
 function get_quote_for_string(string $text) : string
 {
-    return $text ? $text = '"' . $text . '"' : '';
+    return $text ? $text = '«' . $text . '»' : '';
 }
 
 /**

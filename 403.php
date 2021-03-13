@@ -7,7 +7,7 @@
 header("HTTP/1.1 403 Forbidden");
 header("Status: 403 Forbidden");
 
-require_once('bootstrap.php');
+require_once __DIR__ . '/bootstrap.php';
 
 $categories = get_categories($connection);
 

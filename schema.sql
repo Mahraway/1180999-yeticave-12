@@ -39,7 +39,7 @@ CREATE TABLE lots (
 	INDEX lots_user_idx (user_id),
 	FOREIGN KEY (category_id) REFERENCES categories (id),
 	FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN  KEY (winner_id) REFERENCES users (id)
+    FOREIGN KEY (winner_id) REFERENCES users (id)
 );
 
 CREATE TABLE bets (

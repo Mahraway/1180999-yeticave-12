@@ -7,6 +7,9 @@
         }
     ],
     "require": {
-        "swiftmailer/swiftmailer": "^6.2"
+        "swiftmailer/swiftmailer": "^6.2",
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "ext-mysqli": "*",
+        "fileinfo": "*"
     }
 }
