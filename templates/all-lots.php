@@ -18,7 +18,7 @@
         </h2>
     </div>
     <ul class="lots__list">
-        <?php foreach($lots as $lot): ?>
+        <?php foreach($lots as $lot): ?> <!--тут ругается на дулирование кода -->
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="/<?= $lot['image']?>" width="350" height="260" alt="<?= $lot['name']?>">

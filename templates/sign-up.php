@@ -1,8 +1,7 @@
 
-<form class="form container <?= !empty($error) ? 'form--invalid' : '' ?>" action="/sign-up.php" method="post" autocomplete="off"> <!-- form
-    --invalid -->
+<form class="form container <?= !empty($error) ? 'form--invalid' : '' ?>" action="/sign-up.php" method="post" autocomplete="off">
     <h2>Регистрация нового аккаунта</h2>
-    <div class="form__item <?= isset($error['email']) ? 'form__item--invalid' : '' ?>"> <!-- form__item--invalid -->
+    <div class="form__item <?= isset($error['email']) ? 'form__item--invalid' : '' ?>">
         <label for="email">E-mail <sup>*</sup></label>
         <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?= get_post_value('email')?>">
         <span class="form__error"><?= $error['email'] ?? '' ?></span>

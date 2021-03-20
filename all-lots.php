@@ -1,9 +1,9 @@
 <?php
 /**
- * @var mysqli $connection
- * @var string $main_menu
- * @var string $title
- * @var int $config
+ * Описание переменных
+ * @var mysqli $connection идентификатор соединения БД
+ * @var string $title заголовок страницы
+ * @var array $config массив с настройками сайта
  */
 
 require_once __DIR__ . '/bootstrap.php';
@@ -21,11 +21,6 @@ $current_page_number = get_current_page_number($_GET);
 $count_total_founded_lots = get_count_all_lots($connection, $category);
 $total_pages_count = calculate_total_page_count($count_total_founded_lots, $lots_per_page);
 $lots = get_lots_by_category($connection, $category, $lots_per_page, $current_page_number);
-
-if (!$lots) {
-    header('Location: /404.php');
-    exit();
-}
 
 $main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
 $main_page = include_template('all-lots.php', [

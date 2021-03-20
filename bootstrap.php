@@ -8,10 +8,6 @@ error_reporting(E_ALL);
 
 date_default_timezone_set("Europe/Moscow");
 
-// Основные настройки сайта
-
-$title = 'YetiCave';
-
 require_once (__DIR__ . '/vendor/autoload.php');
 require_once (__DIR__ . '/functions/db.php');
 require_once (__DIR__ . '/functions/views.php');
@@ -24,4 +20,5 @@ require_once('config.php');
 
 $config = require 'config.php';
 
+$title = $config['main']['name'];
 $connection = db_connect($config['db']);

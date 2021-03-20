@@ -2,7 +2,7 @@
 /**
  * Функция фильтрации данных из формы добавления лота
  * @param array $form_data
- * @return array
+ * @return array возвращает отфильтрованный массив с данными
  */
 function filter_form_lot(array $form_data) : array
 {
@@ -32,7 +32,7 @@ function filter_form_fields(array $form_data): array
 /**
  * Функция фильтрации поля поиска
  * @param array $search_data
- * @return string
+ * @return string возвращает отфильтрованую строку поля поиска
  */
 function filter_search_form(array $search_data) : string
 {

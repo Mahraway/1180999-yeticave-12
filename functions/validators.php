@@ -199,7 +199,7 @@ function validate_login_password(mysqli $connection, string $email, string $pass
 
     $user = get_user_by_email($connection, $email);
     if ($user) {
-        if (!password_verify($password, $user['pass'])) {
+        if (!password_verify($password, $user['password'])) {
             return 'Вы ввели неверный пароль';
         }
     }
@@ -286,37 +286,31 @@ function validate_lot_description(string $description): ?string
 /**
  * Функиця проверки поля с ценой
  * Проверерка заполненности и на положительное число
- * @param $price string данные из формы поля начальная цена
+ * @param $price int данные из формы поля начальная цена
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_lot_price(string $price): ?string
+function validate_lot_price(int $price): ?string
 {
-    if (empty($price)) {
+    if ($price <= 0) {
         return 'Введите начальную цену';
     }
-    if ($price <= 0 || !is_numeric($price)) {
-        return 'Введите число больше нуля';
-    }
+    $_POST['price'] = $price;
     return null;
 }
 
 /**
  * Функиця проверки поля шага ставки
  * Проверка заполненности и условие, что шаг ставки целое число большее нуля
- * @param string $step данные из формы поля шаг ставки
+ * @param int $step данные из формы поля шаг ставки
  * @return string|null возвращает код ошибки, если он есть
  */
-function validate_lot_step(string $step): ?string
+function validate_lot_step(int $step): ?string
 {
-    if (empty($step)) {
+    if ($step <= 0) {
         return 'Введите шаг ставки';
     }
+    $_POST['step'] = $step;
 
-    if (is_numeric($step) && $step > 0) {
-        $_POST['step'] = round($step, 0, PHP_ROUND_HALF_UP);
-    } else {
-        return 'Введите целое число большее нуля';
-    }
     return null;
 }
 
@@ -359,8 +353,10 @@ function validate_lot_file(array $file): ?string
         if (in_array($file_type, $file_types)) {
             return null;
         }
+
         return $err[1];
     }
+
     return $err[0];
 }
 

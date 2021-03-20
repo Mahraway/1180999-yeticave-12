@@ -1,5 +1,8 @@
 <?php
 return [
+    'main' => [
+        'name' => 'YetiCave',
+    ],
     'db' => [
         'host' => 'localhost',
         'user' => 'root',

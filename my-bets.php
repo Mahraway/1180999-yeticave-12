@@ -1,7 +1,8 @@
 <?php
 /**
- * @var mysqli $connection
- * @var string $title
+ * Описание переменных
+ * @var mysqli $connection идентификатор соединения БД
+ * @var string $title заголовок страницы
  */
 
 include_once __DIR__ . '/bootstrap.php';

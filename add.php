@@ -1,9 +1,8 @@
 <?php
 /**
+ * Описание переменных
  * @var mysqli $connection идентификатор соединения
  * @var string $title заголовок страницы
- * @var string $user_name имя пользователя
- * @var int $is_auth флаг авторизации
  */
 
 require_once __DIR__ . '/bootstrap.php';

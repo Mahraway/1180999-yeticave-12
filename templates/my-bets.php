@@ -57,7 +57,7 @@
                 </div>
             </td>
             <td class="rates__price">
-                <?= format_price($lot['price']) ?>
+                <?= format_price(get_last_bet_of_lot($connection, $lot['id'])['price']) ?>
             </td>
             <td class="rates__time">
                 <?= date('y.m.d в H:i', strtotime($bet['dt_add'])) ?>

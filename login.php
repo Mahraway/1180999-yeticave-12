@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $connection
- * @var $main_menu
- * @var $title
+ * @var mysqli $connection идентификатор соединени БД
+ * @var string $main_menu шаблон главного меню
+ * @var string $title заголовок страницы
  */
 
 require_once __DIR__ . '/bootstrap.php';

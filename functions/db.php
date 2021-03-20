@@ -4,7 +4,7 @@
  * Функция проверки подлкючения К БД
  * Ограничения: функция принимает четыре аргумента - хост, имя пользователя, пароль и имя БД
  * @param array $db_config данные для соединения с БД
- * @return mysqli в случае успеха возвращает идентификатор соединения
+ * @return mysqli в случае успеха возвращает ресурс соединения
  * */
 function db_connect(array $db_config): mysqli
 {
@@ -19,13 +19,14 @@ function db_connect(array $db_config): mysqli
         exit('<br>Соединение не удалось: '. mysqli_connect_error());
     }
     mysqli_set_charset($connection, "UTF8");
+
     return $connection;
 }
 
 /**
  * Функция формирования самых новых и активных лотов на главной странице
- * @param mysqli $connection - идентификатор соединения с БД
- * @return array $lots - ассоциативный массив с содержимым лотов
+ * @param mysqli $connection ресурс соединения
+ * @return array возвращает массив с лотами
  */
 function get_active_lots(mysqli $connection): array
 {
@@ -48,8 +49,8 @@ function get_active_lots(mysqli $connection): array
 
 /**
  * Функция формирования категорий товаров
- * @param mysqli $connection - идентификатор соединения с БД
- * @return array $categories - ассоциативный массив с списком категорий
+ * @param mysqli $connection ресурс соединения
+ * @return array возвращает массив с категориями
  */
 function get_categories(mysqli $connection): array
 {
@@ -67,9 +68,9 @@ function get_categories(mysqli $connection): array
 
 /**
  * Функция возвращает информацию о лоте по id, а так же проверяем существование лота в БД
- * @param int $id - идентифиактор лота
- * @param mysqli $connection - идентифиактор соединения с БД
- * @return array - одномерный массив с данными о лоте
+ * @param int $id идентифиактор лота
+ * @param mysqli $connection ресурс соединения
+ * @return array массив с данными о лоте
  */
 function get_lot(mysqli $connection, int $id): ?array
 {
@@ -92,7 +93,7 @@ function get_lot(mysqli $connection, int $id): ?array
 
 /**
  * Функция добавляет в базу данных новый лот
- * @param mysqli $connection идентифиактор соединения БД
+ * @param mysqli $connection ресурс соединения
  * @param $lot array массив с информацией о лоте
  * @return int в случае успеха, возвращает id добавленного лота
  */
@@ -126,12 +127,12 @@ function add_lot(mysqli $connection, array $lot): int
 
 /**
  * Добавляет нового пользователя в базу данных
- * @param mysqli $connection идентификатор соединения
- * @param array $user данные о пользователе
+ * @param mysqli $connection ресурс соединения
+ * @param array массив с данными о пользователе
  */
 function add_user(mysqli $connection, array $user) : void
 {
-    $sql = "INSERT INTO users (dt_add, name, email, pass, contacts)
+    $sql = "INSERT INTO users (dt_add, name, email, password, contacts)
             VALUES ( ?, ?, ?, ?, ?)";
 
     $data = [
@@ -152,7 +153,6 @@ function add_user(mysqli $connection, array $user) : void
 
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
- *
  * @param mysqli $link Ресурс соединения
  * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
@@ -206,7 +206,7 @@ function db_get_prepare_stmt(mysqli $link,string $sql,array $data = []) : mysqli
 
 /**
  * Возвращает массив с данными пользователя по e-mail
- * @param mysqli $connection идентификатор соединения БД
+ * @param mysqli $connection Ресурс соединения
  * @param string $email проверяемый емайл
  * @return array|null возвращает массив с данными о пользователе
  */
@@ -229,11 +229,11 @@ function get_user_by_email(mysqli $connection, string $email): ?array
 
 /**
  * Формирует список лотов для текущей страницы поиска
- * @param mysqli $connection
- * @param int $lots_per_page
- * @param int $current_page
- * @param string $search
- * @return array
+ * @param mysqli $connection ресурс соединения
+ * @param int $lots_per_page количество элементов на странице
+ * @param int $current_page номер текущей страницы
+ * @param string $search данные с формы поиска
+ * @return array возвращает массив с лотами
  */
 function search_lots(mysqli $connection, string $search, int $lots_per_page, int $current_page) : array
 {
@@ -256,14 +256,15 @@ function search_lots(mysqli $connection, string $search, int $lots_per_page, int
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
+
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
- * Возвращает количество найденных лотов
- * @param mysqli $connection
- * @param string $search
- * @return int
+ * Функция подсчета лотов по полю поиска
+ * @param mysqli $connection ресурс соединения
+ * @param string $search данные с формы поиска
+ * @return int возвращает количество найденных лотов
  */
 function get_count_total_founded_lots_from_search(mysqli $connection, string $search) : int
 {
@@ -287,9 +288,10 @@ function get_count_total_founded_lots_from_search(mysqli $connection, string $se
 }
 
 /**
- * @param mysqli $connection
- * @param int $category
- * @return int
+ * Функция подсчета лотов в категории
+ * @param mysqli $connection ресурс соединения
+ * @param int $category id категории
+ * @return int возвращает количество найденных лотов
  */
 function get_count_all_lots(mysqli $connection, int $category): int
 {
@@ -299,14 +301,16 @@ function get_count_all_lots(mysqli $connection, int $category): int
         exit('Ошибка: ' . mysqli_error($connection));
     }
     $count = mysqli_fetch_assoc($result);
+
     return (int) $count['COUNT(*)'];
 }
 
 /**
- * @param mysqli $connection
- * @param int $user_id
- * @param int $lot_id
- * @param int $price
+ * Функция добавления создания ставки лота
+ * @param mysqli $connection ресурс соединения
+ * @param int $user_id id пользователя
+ * @param int $lot_id id лота
+ * @param int $price сумма ставки
  */
 function add_bet(mysqli $connection, int $user_id, int $lot_id, int $price) : void
 {
@@ -326,9 +330,10 @@ function add_bet(mysqli $connection, int $user_id, int $lot_id, int $price) : vo
 }
 
 /**
- * @param mysqli $connection
- * @param int $user
- * @return array
+ * Возвращает сделанные ставки пользователя
+ * @param mysqli $connection ресурс соединения
+ * @param int $user id пользователя
+ * @return array массив со ставками сделанные пользователем
  */
 function get_my_bets(mysqli $connection, int $user) : array
 {
@@ -340,13 +345,15 @@ function get_my_bets(mysqli $connection, int $user) : array
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
+
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
- * @param mysqli $connection
- * @param int $lot
- * @return array
+ * Возвращает ставки лота
+ * @param mysqli $connection ресурс соединения
+ * @param int $lot id лота
+ * @return array массив со ставками лота
  */
 function get_bets_by_lot(mysqli $connection, int $lot) : array
 {
@@ -363,9 +370,10 @@ function get_bets_by_lot(mysqli $connection, int $lot) : array
 }
 
 /**
- * @param mysqli $connection
- * @param int $lot
- * @return array|null
+ * Возвращает последнюю ставку лота
+ * @param mysqli $connection ресурс соединения
+ * @param int $lot id лота
+ * @return array|null в случае успеха, возвращает массив с последней ставкой
  */
 function get_last_bet_of_lot(mysqli $connection, int $lot) : ?array
 {
@@ -378,12 +386,13 @@ function get_last_bet_of_lot(mysqli $connection, int $lot) : ?array
         exit('Ошибка: ' . mysqli_error($connection));
     }
 
-    return mysqli_fetch_assoc($result) ?? null;
+    return mysqli_fetch_assoc($result) ?? NULL;
 }
 
 /**
- * @param mysqli $connection
- * @return array
+ * Возвращает массив с лотами, у которых не определен победитель
+ * @param mysqli $connection ресурс соединения
+ * @return array массив с лотами без победителей
  */
 function get_lots_without_winner(mysqli $connection): array
 {
@@ -393,13 +402,15 @@ function get_lots_without_winner(mysqli $connection): array
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
+
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
- * @param mysqli $connection
- * @param int $lot
- * @param int $winner_user
+ * Функция добавляет победителя в лот
+ * @param mysqli $connection ресурс соединения
+ * @param int $lot id лота
+ * @param int $winner_user id победившего пользователя
  */
 function add_winner_to_lot(mysqli $connection,int $lot,int $winner_user) : void
 {
@@ -413,9 +424,10 @@ function add_winner_to_lot(mysqli $connection,int $lot,int $winner_user) : void
 }
 
 /**
- * @param mysqli $connection
- * @param int $user_id
- * @return array
+ * Возвращает массив с данными о пользователе по id
+ * @param mysqli $connection ресурс соединения
+ * @param int $user_id id пользователя
+ * @return array возвращает массив с данными о пользователе
  */
 function get_user_by_id(mysqli $connection, int $user_id) : array
 {
@@ -432,9 +444,10 @@ function get_user_by_id(mysqli $connection, int $user_id) : array
 }
 
 /**
- * @param mysqli $connection
- * @param int $user_id
- * @return string
+ * Возвращает имя пользователя по id
+ * @param mysqli $connection ресурс соединения
+ * @param int $user_id id пользователя
+ * @return string возвращает имя пользователя
  */
 function get_user_name_by_id(mysqli $connection, int $user_id) : string
 {
@@ -449,9 +462,10 @@ function get_user_name_by_id(mysqli $connection, int $user_id) : string
 }
 
 /**
- * @param mysqli $connection
- * @param int $id
- * @return string
+ * Возвращает имя катеогрии по id
+ * @param mysqli $connection ресурс соединения
+ * @param int $id id категории
+ * @return string возвращает название категории
  */
 function get_category_by_id(mysqli $connection, int $id): string
 {
@@ -468,11 +482,12 @@ function get_category_by_id(mysqli $connection, int $id): string
 }
 
 /**
- * @param mysqli $connection
- * @param int $category_id
- * @param int $lots_per_page
- * @param int $current_page
- * @return array
+ * Возвращает массив с лотами из заданной категории
+ * @param mysqli $connection ресурс соединения
+ * @param int $category_id id категории
+ * @param int $lots_per_page количество элементов на странице
+ * @param int $current_page текущая страница
+ * @return array возвращает массив с лотами категории
  */
 function get_lots_by_category(mysqli $connection,int $category_id, int $lots_per_page, int $current_page) : array
 {
@@ -495,6 +510,23 @@ function get_lots_by_category(mysqli $connection,int $category_id, int $lots_per
     if (!$result) {
         exit('Ошибка: ' . mysqli_error($connection));
     }
+
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+ * Функция определяет победителя лота
+ * @param mysqli $connection ресурс соединения
+ * @param array $lot массив с лотом
+ * @return int|null возвращает id победителя
+ */
+function complete_lot(mysqli $connection, array $lot): ?int
+{
+    $bets = get_last_bet_of_lot($connection, $lot['id']);
+    if (!empty($bets)) {
+        add_winner_to_lot($connection, $lot['id'], $bets['user_id']);
+        return $bets['user_id'];
+    }
+
+    return null;
+}

@@ -5,7 +5,6 @@
 ?>
 <nav class="nav">
         <ul class="nav__list container">
-            <!--заполните этот список из массива категорий-->
             <?php foreach($categories as $category): ?>
             <li class="nav__item">
                 <a href="/all-lots.php/?category=<?= $category['id'] ?>"><?= $category['name'] ?></a>

@@ -3,8 +3,6 @@
  * Описание переменных
  * @var mysqli $connection идентификатор соединения БД
  * @var string $title заголовок страницы
- * @var string $content шаблон главной страницы
- * @var string $footer шаблон футера
  */
 
 require_once __DIR__ . '/bootstrap.php';

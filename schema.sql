@@ -52,7 +52,7 @@ CREATE TABLE bets (
 	INDEX bets_user_idx (user_id),
 	INDEX bets_lot_idx (lot_id),
 	FOREIGN KEY (user_id) REFERENCES users (id),
-	FOREIGN KEY (lot_id) REFERENCES lots (id),
+	FOREIGN KEY (lot_id) REFERENCES lots (id)
 );
 
 CREATE FULLTEXT INDEX lots_ft_search ON lots(name,description);

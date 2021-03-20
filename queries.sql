@@ -6,7 +6,7 @@ INSERT INTO categories (name, code) VALUES
 	('Инструменты','tools'),
 	('Разное','other');
 
-INSERT INTO users (dt_add, name, email, pass, contacts) VALUES
+INSERT INTO users (dt_add, name, email, password, contacts) VALUES
     (NOW(), 'Иван','ivan@mail.ru','123','Москва'),
     (NOW(), 'Петр','petr@mail.ru','321','Москва'),
     (NOW(), 'Олег','oleg@mail.ru','132','Ростов'),
@@ -14,14 +14,14 @@ INSERT INTO users (dt_add, name, email, pass, contacts) VALUES
     (NOW(), 'Павел','pavel@mail.ru','213','Краснодар');
 
 INSERT INTO lots (user_id, category_id, dt_add, name, description, image, price, dt_end, step) VALUES
-    (1, 1, NOW(), '2014 Rossignol District Snowboard','Описание', 'img/lot-1.jpg', 10999, '2020-08-28', 1),
-    (1, 1, NOW(), 'DC Ply Mens 2016/2017 Snowboard','Описание', 'img/lot-2.jpg', 159999, '2020-11-10 23:00', 1),
-    (1, 2, NOW(), 'Крепления Union Contact Pro 2015 года размер L/XL','Описание', 'img/lot-3.jpg', 8000, '2020-12-07', 1),
-    (2, 3, NOW(), 'Ботинки для сноуборда DC Mutiny Charocal','Описание', 'img/lot-4.jpg', 10999, '2020-12-11', 1),
-    (2, 4, NOW(), 'Куртка для сноуборда DC Mutiny Charocal','Описание', 'img/lot-5.jpg', 7500, '2021-11-10', 1),
-    (2, 4, NOW(), 'Маска Oakley Canopy','Описание', 'img/lot-6.jpg', 5400, '2021-01-11', 1),
-    (1, 1, NOW(), 'ГОРНЫЕ ЛЫЖИ E S/MAX 8 + Z10 GW SALOMON', 'Edge Amplifier ― совершенно новая технология', 'img/lot-100.jpg', 21990,'2021-01-01 00:00:00',1),
-    (2, 4, NOW(), 'Маска Oakley Flight Deck Xm Lavender Balsam', 'Описание', 'img/lot-101.jpg', 16900, '2021-01-11 00:00:00',1);
+    (1, 1, NOW(), '2014 Rossignol District Snowboard','Описание', 'img/lot-1.jpg', 10999, '2021-03-25', 100),
+    (1, 1, NOW(), 'DC Ply Mens 2016/2017 Snowboard','Описание', 'img/lot-2.jpg', 159999, '2021-03-20', 1000),
+    (1, 2, NOW(), 'Крепления Union Contact Pro 2015 года размер L/XL','Описание', 'img/lot-3.jpg', 8000, '2021-03-22', 500),
+    (2, 3, NOW(), 'Ботинки для сноуборда DC Mutiny Charocal','Описание', 'img/lot-4.jpg', 10999, '2021-03-29', 500),
+    (2, 4, NOW(), 'Куртка для сноуборда DC Mutiny Charocal','Описание', 'img/lot-5.jpg', 7500, '2021-04-01', 300),
+    (2, 4, NOW(), 'Маска Oakley Canopy','Описание', 'img/lot-6.jpg', 5400, '2021-03-19', 100),
+    (1, 1, NOW(), 'ГОРНЫЕ ЛЫЖИ E S/MAX 8 + Z10 GW SALOMON', 'Edge Amplifier ― совершенно новая технология', 'img/lot-100.jpg', 21990,'2021-03-19',1500),
+    (2, 4, NOW(), 'Маска Oakley Flight Deck Xm Lavender Balsam', 'Описание', 'img/lot-101.jpg', 16900, '2021-03-30',1000);
 
 
 INSERT INTO bets (user_id, lot_id, dt_add, price) VALUES
@@ -31,8 +31,8 @@ INSERT INTO bets (user_id, lot_id, dt_add, price) VALUES
     (5, 4, NOW(), 11001);
 
 
-SELECT id, name, code 
-FROM categories; 
+SELECT id, name, code
+FROM categories;
 
 SELECT l.id, l.name, l.price, MAX(b.price) AS current_price , image, c.name AS category_name
 FROM lots l

@@ -60,9 +60,10 @@ function calculate_total_page_count(int $count_total_founded_lots, int $lots_per
 }
 
 /**
- * @param array $mailer
- * @param string $user_email
- * @param string $text
+ * Функция отправки письма на e-mail пользователя
+ * @param array $mailer массив с параметрами SMTP
+ * @param string $user_email e-mail пользователя
+ * @param string $text тело e-mail сообщения
  */
 function notify_winner(array $mailer, string $user_email, string $text) :void
 {
@@ -79,17 +80,3 @@ function notify_winner(array $mailer, string $user_email, string $text) :void
     $mailer->send($message);
 }
 
-/**
- * @param mysqli $connection
- * @param array $lot
- * @return int|null
- */
-function complete_lot(mysqli $connection, array $lot): ?int
-{
-    $bets = get_last_bet_of_lot($connection, $lot['id']);
-    if (!empty($bets)) {
-        add_winner_to_lot($connection, $lot['id'], $bets['user_id']);
-        return $bets['user_id'];
-    }
-    return null;
-}

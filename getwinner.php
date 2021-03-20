@@ -1,7 +1,8 @@
 <?php
 /**
- * @var mysqli $connection
- * @var array $config
+ * Описание переменных
+ * @var mysqli $connection идентификатор соединения БД
+ * @var array $config массив с кофнигурацией сайта
  */
 
 require_once __DIR__ . '/bootstrap.php';

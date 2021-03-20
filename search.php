@@ -1,13 +1,9 @@
 <?php
 /**
- * @var mysqli $connection
- * @var array $config
- * @var array $lots
- * @var string $title
- * @var string $search
- * @var string $total_pages_count
- * @var int $count_total_founded_lots
- * @var int $current_page_number
+ * Описание переменных
+ * @var mysqli $connection идентификатор соединения БД
+ * @var string $title заголовок страницы
+ * @var array $config массив с настройками сайта
  */
 
 require_once __DIR__ . '/bootstrap.php';

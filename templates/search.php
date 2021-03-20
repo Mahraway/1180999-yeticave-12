@@ -32,7 +32,6 @@
                         $timer = get_time_before($lot['dt_end']);
                         $time_finishing_class = ($timer[0] < 1) ? 'timer--finishing':  '';
                         ?>
-                        <!-- Вывод таймера лота -->
                         <div class="lot__timer timer <?= $time_finishing_class; ?>">
                             <?= $timer[0].":".sprintf("%02d", $timer[1]); ?>
                     </div>
