@@ -1,9 +1,10 @@
 <?php
 /**
- * @var string $user
- * @var string $lot_url
- * @var string $lot_name
- * @var string $my_bets
+ * Описание переменных
+ * @var string $user имя пользователя
+ * @var string $lot_url ссылка на лот
+ * @var string $lot_name название лота
+ * @var string $my_bets ссылка на ставки пользователя
  */
 ?>
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Описание переменных
- * @var mysqli $connection идентификатор соединения БД
+ * @var mysqli $connection ресурс соединения БД
  * @var array $config массив с кофнигурацией сайта
  */
 

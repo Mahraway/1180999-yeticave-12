@@ -27,7 +27,7 @@ if (!$search || $count_total_founded_lots === 0) {
     $message = 'Ничего не найдено по вашему запросу';
 }
 
-$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
+$main_menu = include_template('/menu/menu.php', ['categories' => $categories]);
 $main_page = include_template('search.php', [
     'lots' => $lots,
     'categories' => $categories,
@@ -38,12 +38,13 @@ $main_page = include_template('search.php', [
     'current_page_number' => $current_page_number,
     'lots_per_page' => $lots_per_page
 ]);
-$main_footer = include_template('footer.php', ['categories' => $categories]);
+$main_footer = include_template('footer.php', ['categories' => $categories, 'main_menu' => $main_menu]);
 $layout_content = include_template('layout.php', [
-    'top_menu' => $main_menu,
+    'main_menu' => $main_menu,
     'content' => $main_page,
     'footer' => $main_footer,
-    'title' => $title . '| Результаты поиска'
+    'title' => $title . '| Результаты поиска',
+    'form_data' => $search
 ]);
 
 print($layout_content);

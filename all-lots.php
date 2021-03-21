@@ -22,24 +22,25 @@ $count_total_founded_lots = get_count_all_lots($connection, $category);
 $total_pages_count = calculate_total_page_count($count_total_founded_lots, $lots_per_page);
 $lots = get_lots_by_category($connection, $category, $lots_per_page, $current_page_number);
 
-$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
+$lots_list = include_template('lots_list.php', ['lots' => $lots, 'connection' => $connection]);
+$main_menu = include_template('/menu/menu.php', ['categories' => $categories]);
 $main_page = include_template('all-lots.php', [
-    'lots' => $lots,
+    'lots_list' => $lots_list,
+    'connection' => $connection,
     'category' => $category,
     'categories' => $categories,
     'message' => $message,
-    'connection' => $connection,
     'total_pages_count' => $total_pages_count,
     'count_total_founded_lots' => $count_total_founded_lots,
     'current_page_number' => $current_page_number,
     'lots_per_page' => $lots_per_page
 ]);
-$main_footer = include_template('footer.php', ['categories' => $categories]);
+$main_footer = include_template('footer.php', ['categories' => $categories, 'main_menu' => $main_menu]);
 $layout_content = include_template('layout.php', [
-    'top_menu' => $main_menu,
+    'main_menu' => $main_menu,
     'content' => $main_page,
     'footer' => $main_footer,
-    'title' => $title
+    'title' => $title . ' | ' . get_category_by_id($connection, $category)
 ]);
 
 print($layout_content);

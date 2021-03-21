@@ -1,7 +1,8 @@
 <?php
 /**
  * Описание переменных
- * @var mysqli $connection идентификатор соединения БД
+ * @var mysqli $connection ресурс соединения БД
+ * @var string $title заголовок страницы
  */
 
 header("HTTP/1.1 404 Not Found");
@@ -11,14 +12,14 @@ require_once __DIR__ . '/bootstrap.php';
 
 $categories = get_categories($connection);
 
-$menu = include_template('promo_menu.php', ['categories' => $categories]);
+$main_menu = include_template('menu/menu.php', ['categories' => $categories]);
 $main_page = include_template('404.php');
-$footer = include_template('footer.php', ['categories' => $categories]);
+$footer = include_template('footer.php', ['categories' => $categories, 'main_menu' => $main_menu]);
 $layout = include_template('layout.php', [
-    'main_menu' => $menu,
+    'main_menu' => $main_menu,
     'categories' => $categories,
     'content' => $main_page,
-    'title' => 'Страница не найдена',
+    'title' => $title . ' | Страница не найдена',
     'footer' => $footer
 ]);
 

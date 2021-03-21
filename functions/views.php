@@ -6,7 +6,7 @@
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template(string $name, array $data = []) : string
+function include_template(string $name, array $data = []): string
 {
     $name = 'templates/' . $name;
     $result = '';
@@ -35,9 +35,10 @@ function include_template(string $name, array $data = []) : string
 function format_price(int $price): string
 {
     if ($price < 1000) {
-        return ceil($price).' ₽';
+        return ceil($price) . ' ₽';
     }
-    return number_format($price, 0, ',', ' ').' ₽';
+
+    return number_format($price, 0, ',', ' ') . ' ₽';
 }
 
 /**
@@ -50,30 +51,33 @@ function format_price(int $price): string
 
 function get_time_before(string $date): array
 {
-    $total = (strtotime($date) - time())/60; // полных минут
+    $total = (strtotime($date) - time()) / 60; // полных минут
 
     if ($total > 0) {
-        $h = floor($total/60); // округление в меньшую сторону
+        $h = floor($total / 60); // округление в меньшую сторону
         $m = $total % 60; // остаток минут
 
         return [$h, $m];
     }
+
     return [0, 0];
 }
 
 
 /**
  * Функция возвращает SELECT для списка поля формы добавленя лота
- * @param string $category_id id категории лота
+ * @param array $form_data данные из формы лота
+ * @param int $category_id id категории лота
  * @return string|null в случае успешной проверки, возвращает SELECT
  */
-function get_post_select(string $category_id) : ?string
+function get_post_select(array $form_data, int $category_id): ?string
 {
-    if (isset($_POST['category_id'])) {
-        if ($category_id == $_POST['category_id']) {
+    if (isset($form_data['category_id'])) {
+        if ($category_id === $form_data['category_id']) {
             return 'selected';
         }
     }
+
     return null;
 }
 
@@ -82,7 +86,7 @@ function get_post_select(string $category_id) : ?string
  * @param string $text исходный текст
  * @return string текст, заключенный в ковычки
  */
-function get_quote_for_string(string $text) : string
+function get_quote_for_string(string $text): string
 {
     return $text ? $text = '«' . $text . '»' : '';
 }
@@ -109,9 +113,9 @@ function get_quote_for_string(string $text) : string
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
-    $number = (int) $number;
+    $number = (int)$number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
@@ -131,4 +135,48 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
         default:
             return $many;
     }
+}
+
+
+/**
+ * Функция преобразует время размещения ставки в "человеческий формат" (5 минут назад, час назад и т. д.).
+ * @param string $date дата размещения ставки
+ * @return string возвращает корректный формат времени ставки
+ */
+function get_correct_timer(string $date): string
+{
+    $correct_timer = '';
+    $timer = (time() - strtotime($date));
+    if ($timer > 0) {
+        switch ($timer) {
+            case ($timer <= 60):
+                $correct_timer = $timer . get_noun_plural_form($timer,
+                        ' секунду назад',
+                        ' секунды назад',
+                        ' секунд назад'
+                    );
+                break;
+            case ($timer <= 3600):
+                $correct_timer = round($timer / 60) . get_noun_plural_form(round($timer / 60),
+                        ' минуту назад',
+                        ' минуты назад',
+                        ' минут назад'
+                    );
+                break;
+            case ($timer <= 3600 * 60 && $timer <= 86400):
+                $correct_timer = round($timer / 3600) . get_noun_plural_form(round($timer / 3600),
+                        ' час назад',
+                        ' часа назад',
+                        ' часов назад'
+                    );
+                break;
+            case ($timer > 86400 && $timer < 86400 * 2):
+                $correct_timer = 'Вчера, в ' . date('H:i', strtotime($date));
+                break;
+            case ($timer > 86400 * 2):
+                $correct_timer = date('d.m.y в H:i', strtotime($date));
+        }
+    }
+
+    return $correct_timer;
 }

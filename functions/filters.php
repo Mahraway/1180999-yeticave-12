@@ -4,7 +4,7 @@
  * @param array $form_data
  * @return array возвращает отфильтрованный массив с данными
  */
-function filter_form_lot(array $form_data) : array
+function filter_form_lot(array $form_data): array
 {
     $form_data = filter_form_fields($form_data);
 
@@ -22,7 +22,7 @@ function filter_form_lot(array $form_data) : array
  */
 function filter_form_fields(array $form_data): array
 {
-    $form_data = array_map(function ($var){
+    $form_data = array_map(function ($var) {
         return htmlspecialchars($var, ENT_QUOTES);
     }, $form_data);
 
@@ -34,9 +34,10 @@ function filter_form_fields(array $form_data): array
  * @param array $search_data
  * @return string возвращает отфильтрованую строку поля поиска
  */
-function filter_search_form(array $search_data) : string
+function filter_search_form(array $search_data): string
 {
     $search_data = filter_form_fields($search_data);
+
     return trim($search_data['search']);
 }
 
