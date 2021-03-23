@@ -12,11 +12,11 @@ $categories = get_categories($connection);
 $lots_per_page = $config['pagination']['lots_per_page'];
 $message = 'Все лоты в категории ';
 
-if (!isset($_GET['category'])) {
+if (!isset($_GET['id'])) {
     header('Location: /404.php');
     exit();
 }
-$category = $_GET['category'];
+$category = $_GET['id'];
 $current_page_number = get_current_page_number($_GET);
 $count_total_founded_lots = get_count_all_lots($connection, $category);
 $total_pages_count = calculate_total_page_count($count_total_founded_lots, $lots_per_page);
