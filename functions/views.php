@@ -146,7 +146,7 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 function get_correct_timer(string $date): string
 {
     $correct_timer = '';
-    $timer = (time() - strtotime($date));
+    $timer = time() - strtotime($date);
 
     switch ($timer) {
         case ($timer < 0):
@@ -159,36 +159,28 @@ function get_correct_timer(string $date): string
                     ' секунд назад'
                 );
             break;
-        case ($timer <= 3600):
-            $correct_timer = round($timer / 60) . get_noun_plural_form(round($timer / 60),
+        case ($timer < 3600):
+            $correct_timer = floor($timer / 60) . get_noun_plural_form(floor($timer / 60),
                     ' минуту назад',
                     ' минуты назад',
                     ' минут назад'
                 );
             break;
-        case ($timer <= 3600 * 60 && $timer <= 86400):
-            $correct_timer = round($timer / 3600) . get_noun_plural_form(round($timer / 3600),
+
+        case ($timer < 3600 * 24):
+            $correct_timer = floor($timer / 3600) . get_noun_plural_form(floor($timer / 3600),
                     ' час назад',
                     ' часа назад',
                     ' часов назад'
                 );
             break;
-        case ($timer > 86400 && $timer < 86400 * 2):
-            $correct_timer = 'Вчера, в ' . date('H:i', strtotime($date));
-            break;
-        case ($timer > 86400 * 2):
-            $correct_timer = date('d.m.y в H:i', strtotime($date));
-    }
-
-    if ($correct_timer === '1 минуту назад') {
-        $correct_timer = '60 секунд назад';
-    }
-    switch ($correct_timer) {
-        case $correct_timer === '1 минуту назад':
-            $correct_timer = '60 секунд назад';
-            break;
-        case $correct_timer === '1 час назад':
-            $correct_timer = '60 минут назад';
+        case ($timer > 3600 * 24):
+            $correct_timer = floor($timer / 86400) . get_noun_plural_form(floor($timer / 86400),
+                    ' день назад',
+                    ' дня назад',
+                    ' дней назад'
+                );
     }
     return $correct_timer;
 }
+
