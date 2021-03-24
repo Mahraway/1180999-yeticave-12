@@ -6,7 +6,7 @@
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template(string $name, array $data = []) : string
+function include_template(string $name, array $data = []): string
 {
     $name = 'templates/' . $name;
     $result = '';
@@ -35,9 +35,10 @@ function include_template(string $name, array $data = []) : string
 function format_price(int $price): string
 {
     if ($price < 1000) {
-        return ceil($price).' ₽';
+        return ceil($price) . ' ₽';
     }
-    return number_format($price, 0, ',', ' ').' ₽';
+
+    return number_format($price, 0, ',', ' ') . ' ₽';
 }
 
 /**
@@ -50,66 +51,33 @@ function format_price(int $price): string
 
 function get_time_before(string $date): array
 {
-    $total = (strtotime($date) - time())/60; // полных минут
+    $total = (strtotime($date) - time()) / MINUTE; // полных минут
 
     if ($total > 0) {
-        $h = floor($total/60); // округление в меньшую сторону
-        $m = $total % 60; // остаток минут
+        $h = floor($total / MINUTE); // округление в меньшую сторону
+        $m = $total % MINUTE; // остаток минут
 
         return [$h, $m];
     }
+
     return [0, 0];
 }
 
-/**
- * Описание: функуия формирования названия категории лота
- * Алгоритм: ID категории лота сравнивает с массивом категорий
- * При выполнении условия, возвращает название категории
- * @param array $lot массив с данными лота
- * @param array $categories массив с категориями
- * @return string $name возвращает возвращает название категории лота
- */
-function get_category_name(array $lot, array $categories): ?string
-{
-    $result = $lot['category_id'];
-    foreach($categories as $category) {
-        switch ($result) {
-            case $category['id']:
-                return $category['name'];
-        }
-    }
-    return null;
-}
-
-/**
- * @param mysqli $connection
- * @param int $user_id
- * @return string
- */
-function get_user_name_by_id (mysqli $connection, int $user_id) : string
-{
-    $sql = "SELECT name FROM users WHERE id='$user_id'";
-    $result = mysqli_query($connection, $sql);
-    if (!$result) {
-        exit('Error: ' . mysqli_error($connection));
-    }
-    $user = mysqli_fetch_assoc($result);
-
-    return $user['name'];
-}
 
 /**
  * Функция возвращает SELECT для списка поля формы добавленя лота
- * @param string $category_id id категории лота
+ * @param array $form_data данные из формы лота
+ * @param int $category_id id категории лота
  * @return string|null в случае успешной проверки, возвращает SELECT
  */
-function get_post_select(string $category_id) : ?string
+function get_post_select(array $form_data, int $category_id): ?string
 {
-    if (isset($_POST['category_id'])) {
-        if ($category_id == $_POST['category_id']) {
+    if (isset($form_data['category_id'])) {
+        if ($category_id === $form_data['category_id']) {
             return 'selected';
         }
     }
+
     return null;
 }
 
@@ -118,9 +86,9 @@ function get_post_select(string $category_id) : ?string
  * @param string $text исходный текст
  * @return string текст, заключенный в ковычки
  */
-function get_quote_for_string(string $text) : string
+function get_quote_for_string(string $text): string
 {
-    return $text ? $text = '"' . $text . '"' : '';
+    return $text ? $text = '«' . $text . '»' : '';
 }
 
 /**
@@ -145,9 +113,9 @@ function get_quote_for_string(string $text) : string
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
-    $number = (int) $number;
+    $number = (int)$number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
@@ -168,3 +136,49 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
             return $many;
     }
 }
+
+/**
+ * Функция форматирует время размещения ставки к читаемому формату" (5 минут назад, час назад и т. д.).
+ * @param string $source_date_time - исходная дата
+ * @param string $event_date_time - дата ставки
+ * @return string возвращает преобразованную в читаемый вид дату ставки
+ */
+function format_time_after(string $source_date_time, string $event_date_time): string
+{
+    $timer = strtotime($source_date_time) - strtotime($event_date_time);
+
+    if ($timer < 0) {
+        return '';
+    }
+
+    if ($timer === 0) {
+        return 'Только что';
+    }
+    if ($timer < MINUTE) {
+        return $timer . get_noun_plural_form($timer,
+                ' секунду назад',
+                ' секунды назад',
+                ' секунд назад'
+            );
+    }
+    if ($timer < HOUR) {
+        return floor($timer / MINUTE) . get_noun_plural_form(floor($timer / MINUTE),
+                ' минуту назад',
+                ' минуты назад',
+                ' минут назад'
+            );
+    }
+    if ($timer < DAY) {
+        return floor($timer / HOUR) . get_noun_plural_form(floor($timer / HOUR),
+                ' час назад',
+                ' часа назад',
+                ' часов назад'
+            );
+    }
+    if ($timer >= DAY && $timer < DAY * 2) {
+        return '1 день назад';
+    }
+
+    return date('y.m.d, в H:i', strtotime($event_date_time));
+}
+

@@ -5,49 +5,51 @@
  * @var string $title заголовок страницы
  */
 
-require_once('bootstrap.php');
+require_once __DIR__ . '/bootstrap.php';
 
+if (!isset($_GET['id'])) {
+    header('Location: 404.php');
+    exit();
+}
 $id = get_param_id($_GET['id']);
+$categories = get_categories($connection);
+$lot = get_lot($connection, $id);
+$form_data = [];
 
-if (empty($id)) {
+if (!$lot['id']) {
     header('Location: 404.php');
     exit();
 }
 
-$categories = get_categories($connection);
-$lot = get_lot($connection,$id);
 $bets = get_bets_by_lot($connection, $lot['id']);
 $error = '';
 
-if (!$lot) {
-    header('Location: 404.php');
-    exit();
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_data = filter_form_fields($_POST);
     $error = validate_add_bet($connection, $form_data, $lot);
     if (!$error) {
-        add_bet($connection, $_SESSION['user']['id'], $lot['id'], (int) $form_data['cost']);
-        header('Location: /lot.php?id='.$lot['id']);
+        add_bet($connection, $_SESSION['user']['id'], $lot['id'], (int)$form_data['cost']);
+        header('Location: /lot.php?id=' . $lot['id']);
         exit();
     }
 }
 
-$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
-$main_page = include_template('lot.php',[
+$main_menu = include_template('/menu/menu.php', ['categories' => $categories]);
+$main_page = include_template('lot.php', [
     'bets' => $bets,
     'lot' => $lot,
     'categories' => $categories,
     'error' => $error,
-    'connection' => $connection
+    'connection' => $connection,
+    'form_data' => $form_data
 ]);
-$main_footer = include_template('footer.php', ['categories' => $categories]);
+$main_footer = include_template('footer.php', ['categories' => $categories, 'main_menu' => $main_menu]);
 $layout_content = include_template('layout.php', [
-        'top_menu' => $main_menu,
+        'main_menu' => $main_menu,
         'content' => $main_page,
         'categories' => $categories,
         'footer' => $main_footer,
-        'title' => $title
+        'title' => $title . ' | ' . $lot['name']
     ]
 );
 

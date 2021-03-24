@@ -3,11 +3,9 @@
  * Описание переменных
  * @var mysqli $connection идентификатор соединения БД
  * @var string $title заголовок страницы
- * @var string $content шаблон главной страницы
- * @var string $footer шаблон футера
  */
 
-require_once 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 if (isset($_SESSION['user'])) {
     header('Location: /403.php');
@@ -15,6 +13,7 @@ if (isset($_SESSION['user'])) {
 
 $categories = get_categories($connection);
 $errors = [];
+$form_data = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -28,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$main_menu = include_template('/menu/top_menu.php', ['categories' => $categories]);
-$main_page = include_template('sign-up.php', ['error' => $errors]);
-$main_footer = include_template('footer.php', ['categories' => $categories]);
+$main_menu = include_template('/menu/menu.php', ['categories' => $categories]);
+$main_page = include_template('sign-up.php', ['error' => $errors, 'form_data' => $form_data]);
+$main_footer = include_template('footer.php', ['categories' => $categories, 'main_menu' => $main_menu]);
 $layout_content = include_template('layout.php', [
-    'top_menu' => $main_menu,
+    'main_menu' => $main_menu,
     'content' => $main_page,
     'footer' => $main_footer,
     'title' => $title

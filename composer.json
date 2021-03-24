@@ -1,0 +1,22 @@
+{
+    "description": "YetiCave",
+    "name": "asus/localhost",
+    "authors": [
+        {
+            "name": "Rashid",
+            "email": "mahraway@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2",
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "ext-mysqli": "*",
+        "ext-fileinfo": "*"
+    },
+    "require-dev": {
+        "kahlan/kahlan": "^5.0"
+    },
+    "scripts": {
+      "test": "./vendor/bin/kahlan --config=bootstrap.php"
+    }
+}

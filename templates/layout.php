@@ -1,5 +1,6 @@
 <?php
 /**
+ * Описание переменных
  * @var string $title заголовок страницы
  * @var int $is_auth флаг авторизации
  * @var string $user_name имя пользователя
@@ -19,47 +20,45 @@
 </head>
 <body>
     <div class="page-wrapper">
-    <header class="main-header">
-        <div class="main-header__container container">
-            <h1 class="visually-hidden">YetiCave</h1>
-            <a class='main-header__logo' href="/">
-                <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
-            </a>
-            <form class="main-header__search" method="get" action="/search.php/?page=1" autocomplete="off">
-                <label class="page__item--hidden" for="search">Поиск</label>
-                <input id="search" type="search" name="search" placeholder="Поиск лота" value="<?= get_field_value('search')?>">
-                <input class="main-header__search-btn" type="submit" name="find" value="Найти">
-            </form>
-            <a class="main-header__add-lot button" href="/add.php">Добавить лот</a>
-
-            <nav class="user-menu">
-            <!-- здесь должен быть PHP код для показа меню и данных пользователя -->
-            <?php if (isset($_SESSION['user'])): ?>
-                <div class="user-menu__logged">
-                    <p><?= $_SESSION['user']['name'] ?></p>
-                    <a class="user-menu__bets" href="/my-bets.php">Мои ставки</a>
-                    <a class="user-menu__logout" href="/logout.php">Выход</a>
-                </div>
-            <?php else: ?>
-                <ul class="user-menu__list">
-                    <li class="user-menu__item">
-                    <a href="/sign-up.php">Регистрация</a>
-                    </li>
-                    <li class="user-menu__item">
-                    <a href="/login.php">Вход</a>
-                    </li>
-                </ul>
-            <?php endif; ?>
-            </nav>
-        </div>
-        <?= $top_menu ?? '' ?>
-    </header>
-    <main class="container"><?= $content ?></main>
-</div>
-
-<footer class="main-footer"><?= $footer ?></footer>
-
-<script src="../flatpickr.js"></script>
-<script src="../script.js"></script>
+        <header class="main-header">
+            <div class="main-header__container container">
+                <h1 class="visually-hidden">YetiCave</h1>
+                <a class='main-header__logo' href="/">
+                    <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
+                </a>
+                <form class="main-header__search" method="get" action="/search.php/?page=1" autocomplete="off">
+                    <label class="page__item--hidden" for="search">Поиск</label>
+                    <input id="search" type="search" name="search" placeholder="<?= $form_data ?? 'Поиск лота' ?>">
+                    <input class="main-header__search-btn" type="submit" name="find" value="Найти">
+                </form>
+                <a class="main-header__add-lot button" href="/add.php">Добавить лот</a>
+                <nav class="user-menu">
+                    <?php if (isset($_SESSION['user'])): ?>
+                    <div class="user-menu__logged">
+                        <p><?= $_SESSION['user']['name'] ?></p>
+                        <a class="user-menu__bets" href="/my-bets.php">Мои ставки</a>
+                        <a class="user-menu__logout" href="/logout.php">Выход</a>
+                    </div>
+                    <?php else: ?>
+                    <ul class="user-menu__list">
+                        <li class="user-menu__item">
+                            <a href="/sign-up.php">Регистрация</a>
+                        </li>
+                        <li class="user-menu__item">
+                            <a href="/login.php">Вход</a>
+                        </li>
+                    </ul>
+                    <?php endif; ?>
+                </nav>
+            </div>
+            <?= $main_menu ?? '' ?>
+        </header>
+        <main class="container"><?= $content ?>
+        </main>
+    </div>
+    <footer class="main-footer"><?= $footer ?>
+    </footer>
+    <script src="../flatpickr.js"></script>
+    <script src="../script.js"></script>
 </body>
 </html>

@@ -9,8 +9,8 @@ function upload_file(array $file): ?string
     if (!empty($file['image']['name'])) {
         $file_name = $file['image']['name'];
         $file_temp = $file['image']['tmp_name'];
-        $file_path = UPLOAD_DIR;
-        $file_status = move_uploaded_file($file_temp, $file_path . $file_name);
+        $file_path = UPLOAD_DIR . '/' . $file_name;
+        $file_status = move_uploaded_file($file_temp, $file_path);
 
         if ($file_status) {
             return 'uploads/' . $file_name;
