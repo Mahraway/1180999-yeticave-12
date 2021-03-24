@@ -32,6 +32,16 @@ describe("Функция get_correct_timer", function() {
         });
     });
 
+    context("Когда прошло 60 секунд", function () {
+        it("возвращает прошедший интервал времени в читаемом формате", function () {
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 60);
+            $result = format_time_after($currentDateTime, $eventDateTime);
+            expect($result)->toBe('1 минуту назад');
+        });
+    });
+
     context("Когда прошел 1 час", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
@@ -42,7 +52,7 @@ describe("Функция get_correct_timer", function() {
         });
     });
 
-    context("Когда прошел 24 часа", function () {
+    context("Когда прошло 24 часа", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
@@ -52,7 +62,7 @@ describe("Функция get_correct_timer", function() {
         });
     });
 
-    context("Когда прошел 48 часа", function () {
+    context("Когда прошло 48 часов", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
