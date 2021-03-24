@@ -1,6 +1,11 @@
 <?php
 const UPLOAD_DIR = __DIR__ . '/uploads';
 
+const MINUTE = 60;
+const HOUR = 3600;
+const DAY = 86400;
+
+
 session_start();
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');

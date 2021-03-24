@@ -26,7 +26,7 @@ describe("Функция get_correct_timer", function() {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
-            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 30);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - MINUTE/2);
             $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('30 секунд назад');
         });
@@ -36,7 +36,7 @@ describe("Функция get_correct_timer", function() {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
-            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 60);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - MINUTE);
             $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('1 минуту назад');
         });
@@ -46,7 +46,7 @@ describe("Функция get_correct_timer", function() {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
-            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 3600);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - HOUR);
             $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('1 час назад');
         });
@@ -56,7 +56,7 @@ describe("Функция get_correct_timer", function() {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
-            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 3600 * 24);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - DAY);
             $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('Вчера');
         });
@@ -66,7 +66,7 @@ describe("Функция get_correct_timer", function() {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
             $currentTimestamp = time();
             $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
-            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 3600 * 48);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - DAY * 2);
             $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('Прошло более двух суток');
         });

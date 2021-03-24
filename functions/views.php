@@ -162,25 +162,23 @@ function format_time_after(string $sourceDateTime, string $eventDateTime): strin
             );
     }
     if ($timer < 3600) {
-        return floor($timer / 60) . get_noun_plural_form(floor($timer / 60),
+        return floor($timer / MINUTE) . get_noun_plural_form(floor($timer / MINUTE),
                 ' минуту назад',
                 ' минуты назад',
                 ' минут назад'
             );
     }
     if ($timer < 3600 * 24) {
-        return floor($timer / 3600) . get_noun_plural_form(floor($timer / 3600),
+        return floor($timer / HOUR) . get_noun_plural_form(floor($timer / HOUR),
                 ' час назад',
                 ' часа назад',
                 ' часов назад'
             );
     }
-    if ($timer >= 3600 * 24 && $timer < 3600 * 48) {
+    if ($timer >= 3600 * 24 && $timer < DAY * 2) {
         return 'Вчера';
     }
-    if ($timer >= 3600 * 48) {
-        return 'Прошло более двух суток';
-    }
-    return '';
+
+    return 'Прошло более двух суток';
 }
 
