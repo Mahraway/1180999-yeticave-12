@@ -141,48 +141,46 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 /**
  * Функция преобразует время размещения ставки в "человеческий формат" (5 минут назад, час назад и т. д.).
  * @param string $date дата размещения ставки
- * @return string|null возвращает корректный формат времени ставки
+ * @return string возвращает корректный формат времени ставки
  */
-function get_correct_timer(string $date): ?string
+function get_correct_timer(string $date): string
 {
-    $correct_timer = '';
     $timer = time() - strtotime($date);
 
-    switch ($timer) {
-        case ($timer < 0):
-            $correct_timer = null;
-            break;
-        case ($timer === 0):
-            $correct_timer = 'Только что';
-            break;
-        case ($timer < 60):
-            $correct_timer = $timer . get_noun_plural_form($timer,
-                    ' секунду назад',
-                    ' секунды назад',
-                    ' секунд назад'
-                );
-            break;
-        case ($timer < 3600):
-            $correct_timer = floor($timer / 60) . get_noun_plural_form(floor($timer / 60),
-                    ' минуту назад',
-                    ' минуты назад',
-                    ' минут назад'
-                );
-            break;
-
-        case ($timer < 3600 * 24):
-            $correct_timer = floor($timer / 3600) . get_noun_plural_form(floor($timer / 3600),
-                    ' час назад',
-                    ' часа назад',
-                    ' часов назад'
-                );
-            break;
-        case ($timer >= 3600 * 24 && $timer < 3600 * 48):
-            $correct_timer = 'Вчера';
-            break;
-        case ($timer >= 3600 * 48):
-            $correct_timer = 'Прошло более двух суток';
+    if ($timer < 0) {
+        return '';
     }
-    return $correct_timer;
+
+    if ($timer === 0) {
+        return 'Только что';
+    }
+    if ($timer < 60) {
+        return $timer . get_noun_plural_form($timer,
+                ' секунду назад',
+                ' секунды назад',
+                ' секунд назад'
+            );
+    }
+    if ($timer < 3600) {
+        return floor($timer / 60) . get_noun_plural_form(floor($timer / 60),
+                ' минуту назад',
+                ' минуты назад',
+                ' минут назад'
+            );
+    }
+    if ($timer < 3600 * 24) {
+        return floor($timer / 3600) . get_noun_plural_form(floor($timer / 3600),
+                ' час назад',
+                ' часа назад',
+                ' часов назад'
+            );
+    }
+    if ($timer >= 3600 * 24 && $timer < 3600 * 48) {
+        return 'Вчера';
+    }
+    if ($timer >= 3600 * 48) {
+        return 'Прошло более двух суток';
+    }
+    return '';
 }
 
