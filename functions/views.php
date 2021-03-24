@@ -137,15 +137,15 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
     }
 }
 
-
 /**
- * Функция преобразует время размещения ставки в "человеческий формат" (5 минут назад, час назад и т. д.).
- * @param string $date дата размещения ставки
- * @return string возвращает корректный формат времени ставки
+ * Функция форматирует время размещения ставки к читаемому формату" (5 минут назад, час назад и т. д.).
+ * @param string $sourceDateTime - исходная дата
+ * @param string $eventDateTime - дата ставки
+ * @return string возвращает преобразованную в читаемый вид дату ставки
  */
-function get_correct_timer(string $date): string
+function format_time_after(string $sourceDateTime, string $eventDateTime): string
 {
-    $timer = time() - strtotime($date);
+    $timer = strtotime($sourceDateTime) - strtotime($eventDateTime);
 
     if ($timer < 0) {
         return '';

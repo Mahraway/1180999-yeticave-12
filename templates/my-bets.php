@@ -60,7 +60,7 @@
                         <?= format_price(get_last_bet_of_lot($connection, $lot['id'])['price']) ?>
                     </td>
                     <td class="rates__time">
-                        <?= get_correct_timer($bet['dt_add']) ?>
+                        <?= format_time_after($bet['dt_add']) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

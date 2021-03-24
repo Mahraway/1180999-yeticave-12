@@ -69,7 +69,7 @@
                             <tr class="history__item">
                                 <td class="history__name"><?= get_user_name_by_id($connection, $bet['user_id']) ?></td>
                                 <td class="history__price"><?= format_price($bet['price']) ?></td>
-                                <td class="history__time"><?= get_correct_timer($bet['dt_add']) ?></td>
+                                <td class="history__time"><?= format_time_after($bet['dt_add']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

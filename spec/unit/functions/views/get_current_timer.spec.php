@@ -4,47 +4,60 @@ describe("Функция get_correct_timer", function() {
 
     context("Когда дата из будущего", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
-            $result = get_correct_timer(date('Y-m-d H:s:i', time() + 1));
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp + 1);
+            $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('');
         });
     });
 
     context("Когда дата текущая", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
-            $time = date('Y-m-d H:i:s', time());
-            $result = get_correct_timer($time);
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('Только что');
         });
     });
 
-    context("Когда прошло 60 секунд", function () {
+    context("Когда прошло 30 секунд", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
-            $time = date('Y-m-d H:i:s', time() - 60);
-            $result = get_correct_timer($time);
-            expect($result)->toBe('1 минуту назад');
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 30);
+            $result = format_time_after($currentDateTime, $eventDateTime);
+            expect($result)->toBe('30 секунд назад');
         });
     });
 
     context("Когда прошел 1 час", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
-            $time = date('Y-m-d H:i:s', time() - 3600);
-            $result = get_correct_timer($time);
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 3600);
+            $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('1 час назад');
         });
     });
 
     context("Когда прошел 24 часа", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
-            $time = date('Y-m-d H:i:s', time() - 3600 * 24);
-            $result = get_correct_timer($time);
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 3600 * 24);
+            $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('Вчера');
         });
     });
 
     context("Когда прошел 48 часа", function () {
         it("возвращает прошедший интервал времени в читаемом формате", function () {
-            $time = date('Y-m-d H:i:s', time() - 3600 * 48);
-            $result = get_correct_timer($time);
+            $currentTimestamp = time();
+            $currentDateTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $eventDateTime = date('Y-m-d H:i:s', $currentTimestamp - 3600 * 48);
+            $result = format_time_after($currentDateTime, $eventDateTime);
             expect($result)->toBe('Прошло более двух суток');
         });
     });
