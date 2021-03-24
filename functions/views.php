@@ -177,7 +177,7 @@ function get_correct_timer(string $date): string
                     ' часов назад'
                 );
             break;
-        case ($timer >= 3600 * 24 || $timer < 3600 * 48):
+        case ($timer >= 3600 * 24 && $timer < 3600 * 48):
             $correct_timer = 'Вчера';
             break;
         case ($timer >= 3600 * 48):

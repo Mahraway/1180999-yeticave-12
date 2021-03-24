@@ -93,6 +93,16 @@ if ($time === 'Вчера') {
     echo 'Ошибка';
 }
 
+echo '<hr />' . 'Когда прошло 47 часов ожидаем : "Прошло более двух суток"' . '<br />';
+$time = date('Y-m-d H:i:s', time()-(3600*47));
+$time = get_correct_timer($time);
+var_dump($time);
+if ($time === 'Прошло более двух суток') {
+    echo '<b>Успешно</b>';
+} else {
+    echo 'Ошибка';
+}
+
 echo '<hr />' . 'Когда прошло 48 часов ожидаем : "Прошло более двух суток"' . '<br />';
 $time = date('Y-m-d H:i:s', time()-(3600*48));
 $time = get_correct_timer($time);
