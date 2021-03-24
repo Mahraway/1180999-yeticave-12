@@ -150,6 +150,9 @@ function get_correct_timer(string $date): string
 
     switch ($timer) {
         case ($timer < 0):
+            $correct_timer = '';
+            break;
+        case ($timer === 0):
             $correct_timer = 'Только что';
             break;
         case ($timer < 60):
@@ -174,12 +177,11 @@ function get_correct_timer(string $date): string
                     ' часов назад'
                 );
             break;
-        case ($timer > 3600 * 24):
-            $correct_timer = floor($timer / 86400) . get_noun_plural_form(floor($timer / 86400),
-                    ' день назад',
-                    ' дня назад',
-                    ' дней назад'
-                );
+        case ($timer >= 3600 * 24 || $timer < 3600 * 48):
+            $correct_timer = 'Вчера';
+            break;
+        case ($timer >= 3600 * 48):
+            $correct_timer = 'Прошло более двух суток';
     }
     return $correct_timer;
 }
