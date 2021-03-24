@@ -141,16 +141,16 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 /**
  * Функция преобразует время размещения ставки в "человеческий формат" (5 минут назад, час назад и т. д.).
  * @param string $date дата размещения ставки
- * @return string возвращает корректный формат времени ставки
+ * @return string|null возвращает корректный формат времени ставки
  */
-function get_correct_timer(string $date): string
+function get_correct_timer(string $date): ?string
 {
     $correct_timer = '';
     $timer = time() - strtotime($date);
 
     switch ($timer) {
         case ($timer < 0):
-            $correct_timer = '';
+            $correct_timer = null;
             break;
         case ($timer === 0):
             $correct_timer = 'Только что';
