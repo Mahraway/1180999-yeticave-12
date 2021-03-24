@@ -51,11 +51,11 @@ function format_price(int $price): string
 
 function get_time_before(string $date): array
 {
-    $total = (strtotime($date) - time()) / 60; // полных минут
+    $total = (strtotime($date) - time()) / MINUTE; // полных минут
 
     if ($total > 0) {
-        $h = floor($total / 60); // округление в меньшую сторону
-        $m = $total % 60; // остаток минут
+        $h = floor($total / MINUTE); // округление в меньшую сторону
+        $m = $total % MINUTE; // остаток минут
 
         return [$h, $m];
     }
@@ -154,28 +154,28 @@ function format_time_after(string $sourceDateTime, string $eventDateTime): strin
     if ($timer === 0) {
         return 'Только что';
     }
-    if ($timer < 60) {
+    if ($timer < MINUTE) {
         return $timer . get_noun_plural_form($timer,
                 ' секунду назад',
                 ' секунды назад',
                 ' секунд назад'
             );
     }
-    if ($timer < 3600) {
+    if ($timer < HOUR) {
         return floor($timer / MINUTE) . get_noun_plural_form(floor($timer / MINUTE),
                 ' минуту назад',
                 ' минуты назад',
                 ' минут назад'
             );
     }
-    if ($timer < 3600 * 24) {
+    if ($timer < DAY) {
         return floor($timer / HOUR) . get_noun_plural_form(floor($timer / HOUR),
                 ' час назад',
                 ' часа назад',
                 ' часов назад'
             );
     }
-    if ($timer >= 3600 * 24 && $timer < DAY * 2) {
+    if ($timer >= DAY && $timer < DAY * 2) {
         return 'Вчера';
     }
 
