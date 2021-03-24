@@ -139,13 +139,13 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 
 /**
  * Функция форматирует время размещения ставки к читаемому формату" (5 минут назад, час назад и т. д.).
- * @param string $sourceDateTime - исходная дата
- * @param string $eventDateTime - дата ставки
+ * @param string $source_date_time - исходная дата
+ * @param string $event_date_time - дата ставки
  * @return string возвращает преобразованную в читаемый вид дату ставки
  */
-function format_time_after(string $sourceDateTime, string $eventDateTime): string
+function format_time_after(string $source_date_time, string $event_date_time): string
 {
-    $timer = strtotime($sourceDateTime) - strtotime($eventDateTime);
+    $timer = strtotime($source_date_time) - strtotime($event_date_time);
 
     if ($timer < 0) {
         return '';
@@ -176,9 +176,9 @@ function format_time_after(string $sourceDateTime, string $eventDateTime): strin
             );
     }
     if ($timer >= DAY && $timer < DAY * 2) {
-        return 'Вчера';
+        return '1 день назад';
     }
 
-    return 'Прошло более двух суток';
+    return date('y.m.d, в H:i', strtotime($event_date_time));
 }
 
